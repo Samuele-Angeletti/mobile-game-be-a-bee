@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
 
     InputSystem inputSystem;
     FlockManager flockManager;
+    UIManager uiManager;
     private void Awake()
     {
         
@@ -42,7 +43,7 @@ public class GameManager : MonoBehaviour
         inputSystem.Player.TouchScreen.performed += JumpPerformed;
         inputSystem.Player.JumpDEMO.performed += JumpPerformed;
 
-
+        uiManager = FindObjectOfType<UIManager>();
         flockManager = FindObjectOfType<FlockManager>();
     }
 
@@ -55,5 +56,11 @@ public class GameManager : MonoBehaviour
     {
         flockManager.Initialize();
         IsGameStarted = true;
+    }
+
+    public void GameOver()
+    {
+        IsGameStarted = false;
+        uiManager.ResetMenu();
     }
 }

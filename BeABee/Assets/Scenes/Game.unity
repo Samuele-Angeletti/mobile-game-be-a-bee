@@ -424,7 +424,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ConfineMode: 0
   m_BoundingVolume: {fileID: 0}
-  m_BoundingShape2D: {fileID: 0}
+  m_BoundingShape2D: {fileID: 190440884}
   m_ConfineScreenEdges: 1
   m_Damping: 0
 --- !u!114 &927768336
@@ -777,6 +777,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9076444657577680054, guid: 17696e386285bca469b62acf4f183477, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.91
+      objectReference: {fileID: 0}
+    - target: {fileID: 9076444657887220848, guid: 17696e386285bca469b62acf4f183477, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 9076444658495443077, guid: 17696e386285bca469b62acf4f183477, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -8.08
+      objectReference: {fileID: 0}
     - target: {fileID: 9076444658779208101, guid: 17696e386285bca469b62acf4f183477, type: 3}
       propertyPath: m_Name
       value: FlockManager

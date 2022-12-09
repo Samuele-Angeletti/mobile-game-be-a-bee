@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3423969331213353696}
   - component: {fileID: 2428097066123797531}
   - component: {fileID: 2357562490477248013}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Bee
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -72,7 +72,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -104,7 +104,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4802507689775984442}
   - component: {fileID: 3369865289827658826}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8637460261938194899}
   - component: {fileID: 6326383584887973834}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LeaderPointerSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

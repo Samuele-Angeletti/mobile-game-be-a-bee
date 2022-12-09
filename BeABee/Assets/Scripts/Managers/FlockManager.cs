@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FlockManager : MonoBehaviour
@@ -19,10 +20,18 @@ public class FlockManager : MonoBehaviour
     List<Bee> beeList;
     Bee leaderBee;
     float debugTimePass;
-
+    Queue<Bee> beeQueue;
     private void Awake()
     {
         beeList = new List<Bee>();
+        beeQueue = new Queue<Bee>();
+    }
+
+    private void Start()
+    {
+        FrontFlockPosition.transform.parent = null;
+        MinPosition.transform.parent = null;
+        MaxPosition.transform.parent = null;
     }
 
     public void Initialize()
@@ -32,13 +41,26 @@ public class FlockManager : MonoBehaviour
 
     private Bee SpawnBee(Vector3 position, bool isLeader, Sprite sprite)
     {
-        var newBee = Instantiate(beePrefab, position, Quaternion.identity);
+        Bee newBee = beeQueue.Count > 0 ? beeQueue.Dequeue() : Instantiate(beePrefab, position, Quaternion.identity);
+
+        if (!newBee.gameObject.activeSelf)
+        {
+            newBee.gameObject.SetActive(true);
+            newBee.transform.position = position;
+        }
+        else
+        {
+            newBee.onKilled += () => beeQueue.Enqueue(newBee);
+            newBee.onKilled += () => beeList.Remove(newBee);
+        }
+
         newBee.Initialize(isLeader, sprite, this);
         beeList.Add(newBee);
         if(leaderBee != null)
             beeList.ForEach(x => x.SetFlockLeader(leaderBee));
         if (!newBee.IsLeader)
-            newBee.SetXDestination(GetRandomXPosition());
+            newBee.SetXDestination(newBee.transform.position);
+
         return newBee;
     }
 
@@ -75,9 +97,20 @@ public class FlockManager : MonoBehaviour
         }
     }
 
-    public void SetNewLeader(Bee bee)
+    public void SetNewLeader(Bee bee = null)
     {
-        leaderBee = bee;
+        leaderBee = bee != null 
+            ? bee 
+            : beeList.Count > 0 
+            ? beeList.First()
+            : null;
+
+        if(leaderBee == null)
+        {
+            GameManager.Instance.GameOver();
+            return;
+        }
+
         leaderBee.SetLeader();
         beeList.ForEach(x => x.SetFlockLeader(leaderBee));
     }

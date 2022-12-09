@@ -27,6 +27,9 @@ public class Bee : MonoBehaviour
     private FlockManager _flockManager;
     public bool IsLeader { get; set; }
 
+    public delegate void OnKilled();
+    public OnKilled onKilled;
+
     private void Awake()
     {
         _rigidbody2D = gameObject.SearchComponent<Rigidbody2D>();
@@ -50,6 +53,14 @@ public class Bee : MonoBehaviour
 
     public void Kill()
     {
+        onKilled?.Invoke();
+
+        if (IsLeader)
+        {
+            IsLeader = false;
+            _leaderPointerRenderer.SetActive(false);
+            _flockManager.SetNewLeader();
+        }
         gameObject.SetActive(false);
     }
 
@@ -180,6 +191,15 @@ public class Bee : MonoBehaviour
 
     public void SetFlockLeader(Bee flockLeader)
     {
-        this._flockLeader = flockLeader;
+        _jumping = false;
+        _goingUp = false;
+        _flockLeader = flockLeader;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetComponentInParent<DeathWall>() != null)
+            Kill();
+    }
+
 }
