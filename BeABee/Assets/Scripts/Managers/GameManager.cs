@@ -4,15 +4,56 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    #region SINGLETON
+    private static GameManager instance;
+    public static GameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = FindObjectOfType<GameManager>();
+                if (instance != null)
+                    return instance;
+
+                GameObject go = new GameObject("GameManager");
+                return go.AddComponent<GameManager>();
+            }
+            else
+                return instance;
+        }
+        set
+        {
+            instance = value;
+        }
+    }
+    #endregion
+
+    [HideInInspector] public bool IsGameStarted;
+
+    InputSystem inputSystem;
+    FlockManager flockManager;
+    private void Awake()
     {
         
+        inputSystem = new InputSystem();
+
+        inputSystem.Player.Enable();
+        inputSystem.Player.TouchScreen.performed += JumpPerformed;
+        inputSystem.Player.JumpDEMO.performed += JumpPerformed;
+
+
+        flockManager = FindObjectOfType<FlockManager>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        
+        flockManager.Jump();
+    }
+
+    public void StartGame()
+    {
+        flockManager.Initialize();
+        IsGameStarted = true;
     }
 }
