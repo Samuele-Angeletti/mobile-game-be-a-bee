@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eed437cc6dc0229468e23e8cddbe560c, type: 3}
+  m_Name: AddOneBirdFat 1
+  m_EditorClassIdentifier: 
+  YOffsetMin: -5
+  YOffsetMax: 5
+  Speed: 40
+  OnPickUpEffect: {fileID: 0}
+  Sprite: {fileID: 21300000, guid: 95e2e5e7c2adc46ab812aa50be0419e6, type: 3}
+  InitialScale: {x: 0.8, y: 0.8, z: 0.8}
+  ProbabilityToSpawn: 1
+  PickableType: 0
+  MessageType: 1
+  BirdType: 1
+  Score: 0

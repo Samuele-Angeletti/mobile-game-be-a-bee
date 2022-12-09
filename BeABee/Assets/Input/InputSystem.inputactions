@@ -1,0 +1,71 @@
+{
+    "name": "InputSystem",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "1bd8b254-1272-47d5-80f7-e0ef39dbf5d2",
+            "actions": [
+                {
+                    "name": "Jump",
+                    "type": "Value",
+                    "id": "a1ed0a51-f4f8-447a-9e77-3dc283b928a7",
+                    "expectedControlType": "Touch",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "JumpDEMO",
+                    "type": "Button",
+                    "id": "c20d0408-2711-41f0-b4a9-64acf8f82fb5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "TouchScreen",
+                    "type": "Button",
+                    "id": "2d3b1cfd-ca14-48e3-bc99-b66b8e4bab63",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)"
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "02278170-c5ff-43ad-acef-669962877c4d",
+                    "path": "<Touchscreen>/primaryTouch",
+                    "interactions": "Tap",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bf861548-7990-470a-a989-f1e9f6628473",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "JumpDEMO",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8cec5721-f5d6-4447-8c47-0189675d4c40",
+                    "path": "<Touchscreen>/primaryTouch/press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TouchScreen",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
