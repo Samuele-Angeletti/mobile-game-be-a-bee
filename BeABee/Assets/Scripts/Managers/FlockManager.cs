@@ -64,23 +64,17 @@ public class FlockManager : MonoBehaviour
         return newBee;
     }
 
+    public void SpawnRandomBee()
+    {
+        SpawnBee(transform.position + GetRandomXPosition(), false, mountainSprite);
+    }
+
     private void Update()
     {
         if (leaderBee != null)
             transform.position = leaderBee.transform.position;
         else
             transform.position = Vector3.zero;
-
-        if(GameManager.Instance.IsGameStarted)
-        {
-            debugTimePass += Time.deltaTime;
-            if(debugTimePass >= 4)
-            {
-                debugTimePass = 0;
-                SpawnBee(transform.position + GetRandomXPosition(), false, mountainSprite);
-            }
-        }
-        
     }
 
     private Vector3 GetRandomXPosition()
@@ -116,31 +110,37 @@ public class FlockManager : MonoBehaviour
     }
 
 #if UNITY_EDITOR
+    [Header("Gizmo Settings")]
+    [SerializeField] bool activeGizmo = true;
     private void OnDrawGizmos()
     {
-        if(FrontFlockPosition != null)
+        if(activeGizmo)
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(FrontFlockPosition.position, 0.3f);
+            if (FrontFlockPosition != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireSphere(FrontFlockPosition.position, 0.3f);
 
-            Gizmos.color = Color.white;
-            Gizmos.DrawWireSphere(FrontFlockPosition.position + new Vector3(-2, YRandomPositionOnJump), 0.2f);
-            Gizmos.DrawWireSphere(FrontFlockPosition.position - new Vector3(2, YRandomPositionOnJump), 0.2f);
-            Gizmos.DrawLine(FrontFlockPosition.position + new Vector3(-2, YRandomPositionOnJump), FrontFlockPosition.position - new Vector3(2, YRandomPositionOnJump));
+                Gizmos.color = Color.white;
+                Gizmos.DrawWireSphere(FrontFlockPosition.position + new Vector3(-2, YRandomPositionOnJump), 0.2f);
+                Gizmos.DrawWireSphere(FrontFlockPosition.position - new Vector3(2, YRandomPositionOnJump), 0.2f);
+                Gizmos.DrawLine(FrontFlockPosition.position + new Vector3(-2, YRandomPositionOnJump), FrontFlockPosition.position - new Vector3(2, YRandomPositionOnJump));
+            }
+
+            if (MinPosition != null && MaxPosition != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawSphere(MinPosition.position, 0.3f);
+                Gizmos.DrawSphere(MaxPosition.position, 0.3f);
+
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(MinPosition.position, new Vector3(MinPosition.position.x, MaxPosition.position.y, 0));
+                Gizmos.DrawLine(MinPosition.position, new Vector3(MaxPosition.position.x, MinPosition.position.y, 0));
+                Gizmos.DrawLine(MaxPosition.position, new Vector3(MinPosition.position.x, MaxPosition.position.y, 0));
+                Gizmos.DrawLine(MaxPosition.position, new Vector3(MaxPosition.position.x, MinPosition.position.y, 0));
+            }
         }
-
-        if(MinPosition != null && MaxPosition != null)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(MinPosition.position, 0.3f);
-            Gizmos.DrawSphere(MaxPosition.position, 0.3f);
-
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(MinPosition.position, new Vector3(MinPosition.position.x, MaxPosition.position.y, 0));
-            Gizmos.DrawLine(MinPosition.position, new Vector3(MaxPosition.position.x, MinPosition.position.y, 0));
-            Gizmos.DrawLine(MaxPosition.position, new Vector3(MinPosition.position.x, MaxPosition.position.y, 0));
-            Gizmos.DrawLine(MaxPosition.position, new Vector3(MaxPosition.position.x, MinPosition.position.y, 0));
-        }
+        
     }
 #endif
 }

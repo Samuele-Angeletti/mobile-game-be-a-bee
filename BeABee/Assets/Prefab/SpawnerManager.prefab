@@ -110,8 +110,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPosition: {fileID: 464560648141746786}
   deathPosition: {fileID: 464560648389793628}
-  spawnablePrefabList: []
-  timeSpawn: 3
+  spawnYRange: 5.8
+  spawnablePrefabList:
+  - {fileID: 6448237527242492075, guid: 62f75c3e86d5a644aa6234e6ac00a418, type: 3}
+  - {fileID: 7646754656557516279, guid: f1ac38bea2e0a39419d8eee527e9aea2, type: 3}
+  - {fileID: 2019405042183573380, guid: 8b16f37f7ab2659479eca9a8d10e7abc, type: 3}
+  timeSpawn: 6
   chanceSpawnPickable: 30
   chanceSpawnObstacle: 70
   chanceSpawnEnemy: 90
+  activeGizmo: 1
+  radiusSphere: 0.2
+  color: {r: 0, g: 1, b: 0.4793043, a: 1}

@@ -135,11 +135,6 @@ public class Bee : MonoBehaviour
                 GoToXDestination(_xDestination);
             }
         }
-        else
-        {
-            _rigidbody2D.velocity = Vector3.zero;
-            _verticalMove = 0;
-        }
     }
 
     private void FollowTheLeader()
@@ -198,8 +193,49 @@ public class Bee : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponentInParent<DeathWall>() != null)
+        if (collision.GetComponentInParent<DeathWall>() != null || collision.GetComponentInParent<ObstacleSpawnable>() != null)
             Kill();
+        else if (collision.GetComponent<EnemySpawnable>() != null)
+        {
+            _rigidbody2D.velocity = collision.GetComponent<EnemySpawnable>().Rigidbody.velocity;
+            _verticalMove = 0;
+            _canMove = false;
+            var enemySpawnable = collision.GetComponent<EnemySpawnable>();
+            transform.parent = enemySpawnable.transform;
+        }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.GetComponent<EnemySpawnable>() != null)
+        {
+            _canMove = true;
+            transform.parent = null;
+        }
+    }
+
+    public void AddPickable(EPickableType pickableType)
+    {
+        switch (pickableType)
+        {
+            case EPickableType.AddOneBee:
+                _flockManager.SpawnRandomBee();
+                break;
+            case EPickableType.AddTwoBees:
+                _flockManager.SpawnRandomBee();
+                _flockManager.SpawnRandomBee();
+                break;
+            case EPickableType.AddThreeBees:
+                _flockManager.SpawnRandomBee();
+                _flockManager.SpawnRandomBee();
+                _flockManager.SpawnRandomBee();
+                break;
+            case EPickableType.Invincible:
+                Debug.Log("invincible");
+                break;
+            case EPickableType.Bomb:
+                Debug.Log("bomb attack ready");
+                break;
+        }
+    }
 }

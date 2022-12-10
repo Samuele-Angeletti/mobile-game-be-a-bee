@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector] public bool IsGameStarted;
 
+    public delegate void OnGameOver();
+    public OnGameOver onGameOver;
+
     InputSystem inputSystem;
     FlockManager flockManager;
     UIManager uiManager;
@@ -61,6 +64,9 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         IsGameStarted = false;
+
+        onGameOver?.Invoke();
+
         uiManager.ResetMenu();
     }
 }
