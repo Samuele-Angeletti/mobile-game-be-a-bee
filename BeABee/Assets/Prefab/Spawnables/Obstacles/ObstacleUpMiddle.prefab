@@ -339,7 +339,7 @@ MonoBehaviour:
   ObstacleType: 0
   EnemyType: 0
   PickableType: 0
-  obstacleType: 3
+  obstacleType: 4
   upCollider: {fileID: 6337085856440347053}
   middleCollider: {fileID: 2261121698513985537}
   lowCollider: {fileID: 4294961896209723463}

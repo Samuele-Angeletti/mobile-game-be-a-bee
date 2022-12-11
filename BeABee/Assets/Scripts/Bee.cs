@@ -22,7 +22,7 @@ public class Bee : MonoBehaviour
     private float _verticalMove;
     private bool _onXDestination = false;
     private Vector3 _xDestination;
-    private float _randomPosRelativeToLeader;
+    private float _randomYRelativeToLeader;
     private Bee _flockLeader;
     private FlockManager _flockManager;
     public bool IsLeader { get; set; }
@@ -54,7 +54,8 @@ public class Bee : MonoBehaviour
     public void Kill()
     {
         onKilled?.Invoke();
-
+        _rigidbody2D.velocity = Vector2.zero;
+        _verticalMove = 0;
         if (IsLeader)
         {
             IsLeader = false;
@@ -139,7 +140,7 @@ public class Bee : MonoBehaviour
 
     private void FollowTheLeader()
     {
-        Vector3 npos = _flockLeader.transform.position + new Vector3(0, _randomPosRelativeToLeader, 0);
+        Vector3 npos = _flockLeader.transform.position + new Vector3(0, _randomYRelativeToLeader, 0);
         Vector3 direction = npos - transform.position;
         Vector3 movement = new Vector3(0, direction.normalized.y * _followSpeed * Time.fixedDeltaTime);
 
@@ -174,13 +175,14 @@ public class Bee : MonoBehaviour
         _leaderPointerRenderer.SetActive(true);
     }
 
-    public void SetRandomPos(float min, float max)
+    public void SetRandomY(float min, float max)
     {
-        _randomPosRelativeToLeader = Random.Range(min, max);
+        _randomYRelativeToLeader = Random.Range(min, max);
     }
 
     public void SetXDestination(Vector3 newXDestination)
     {
+        _onXDestination = false;
         _xDestination = newXDestination;
     }
 
@@ -194,7 +196,11 @@ public class Bee : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.GetComponentInParent<DeathWall>() != null || collision.GetComponentInParent<ObstacleSpawnable>() != null)
+        {
+            if(!_canMove)
+                transform.parent = null;
             Kill();
+        }
         else if (collision.GetComponent<EnemySpawnable>() != null)
         {
             _rigidbody2D.velocity = collision.GetComponent<EnemySpawnable>().Rigidbody.velocity;

@@ -29,17 +29,22 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    [HideInInspector] public bool IsGameStarted;
+    [HideInInspector] public bool IsGamePlaying;
+    [HideInInspector] public float MetersDone = 0;
+    [HideInInspector] public int ScoreDone = 0;
+    [HideInInspector] public int FlockReached = 0;
 
     public delegate void OnGameOver();
     public OnGameOver onGameOver;
 
     InputSystem inputSystem;
     FlockManager flockManager;
+    SpawnerManager spawnerManager;
     UIManager uiManager;
+
+
     private void Awake()
     {
-        
         inputSystem = new InputSystem();
 
         inputSystem.Player.Enable();
@@ -48,6 +53,7 @@ public class GameManager : MonoBehaviour
 
         uiManager = FindObjectOfType<UIManager>();
         flockManager = FindObjectOfType<FlockManager>();
+        spawnerManager = FindObjectOfType<SpawnerManager>();
     }
 
     private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
@@ -58,15 +64,29 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         flockManager.Initialize();
-        IsGameStarted = true;
+        IsGamePlaying = true;
     }
 
     public void GameOver()
     {
-        IsGameStarted = false;
+        IsGamePlaying = false;
 
         onGameOver?.Invoke();
 
+        MetersDone = 0;
+        FlockReached = 0;
+        ScoreDone = 0;
+
         uiManager.ResetMenu();
+    }
+
+    private void Update()
+    {
+        if(IsGamePlaying)
+        {
+            MetersDone += Time.deltaTime;
+
+            FlockReached = flockManager.ActiveBeeCount;
+        }
     }
 }

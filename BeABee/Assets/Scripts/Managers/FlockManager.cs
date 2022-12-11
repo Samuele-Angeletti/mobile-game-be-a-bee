@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class FlockManager : MonoBehaviour
+public class FlockManager : MonoBehaviour, ISubscriber
 {
     [SerializeField] Bee beePrefab;
     [SerializeField] Sprite spaceSprite;
@@ -17,14 +17,16 @@ public class FlockManager : MonoBehaviour
     public Transform MaxPosition;
     public float YRandomPositionOnJump;
 
-    List<Bee> beeList;
-    Bee leaderBee;
-    float debugTimePass;
-    Queue<Bee> beeQueue;
+    public int ActiveBeeCount => _beeList.Where(x => x.gameObject.activeSelf).Count();
+
+    List<Bee> _beeList;
+    Bee _leaderBee;
+
+    Queue<Bee> _beeQueue;
     private void Awake()
     {
-        beeList = new List<Bee>();
-        beeQueue = new Queue<Bee>();
+        _beeList = new List<Bee>();
+        _beeQueue = new Queue<Bee>();
     }
 
     private void Start()
@@ -32,6 +34,8 @@ public class FlockManager : MonoBehaviour
         FrontFlockPosition.transform.parent = null;
         MinPosition.transform.parent = null;
         MaxPosition.transform.parent = null;
+
+        Publisher.Subscribe(this, typeof(EnemyKilledMessage));
     }
 
     public void Initialize()
@@ -41,7 +45,7 @@ public class FlockManager : MonoBehaviour
 
     private Bee SpawnBee(Vector3 position, bool isLeader, Sprite sprite)
     {
-        Bee newBee = beeQueue.Count > 0 ? beeQueue.Dequeue() : Instantiate(beePrefab, position, Quaternion.identity);
+        Bee newBee = _beeQueue.Count > 0 ? _beeQueue.Dequeue() : Instantiate(beePrefab, position, Quaternion.identity);
 
         if (!newBee.gameObject.activeSelf)
         {
@@ -50,14 +54,14 @@ public class FlockManager : MonoBehaviour
         }
         else
         {
-            newBee.onKilled += () => beeQueue.Enqueue(newBee);
-            newBee.onKilled += () => beeList.Remove(newBee);
+            newBee.onKilled += () => _beeQueue.Enqueue(newBee);
+            newBee.onKilled += () => _beeList.Remove(newBee);
         }
 
         newBee.Initialize(isLeader, sprite, this);
-        beeList.Add(newBee);
-        if(leaderBee != null)
-            beeList.ForEach(x => x.SetFlockLeader(leaderBee));
+        _beeList.Add(newBee);
+        if(_leaderBee != null)
+            _beeList.ForEach(x => x.SetFlockLeader(_leaderBee));
         if (!newBee.IsLeader)
             newBee.SetXDestination(newBee.transform.position);
 
@@ -71,8 +75,8 @@ public class FlockManager : MonoBehaviour
 
     private void Update()
     {
-        if (leaderBee != null)
-            transform.position = leaderBee.transform.position;
+        if (_leaderBee != null)
+            transform.position = _leaderBee.transform.position;
         else
             transform.position = Vector3.zero;
     }
@@ -84,29 +88,46 @@ public class FlockManager : MonoBehaviour
 
     public void Jump()
     {
-        foreach (var bee in beeList)
+        foreach (var bee in _beeList)
         {
-            bee.SetRandomPos(-YRandomPositionOnJump, YRandomPositionOnJump);
+            bee.SetRandomY(-YRandomPositionOnJump, YRandomPositionOnJump);
             bee.Jump();
         }
     }
 
     public void SetNewLeader(Bee bee = null)
     {
-        leaderBee = bee != null 
+        _leaderBee = bee != null 
             ? bee 
-            : beeList.Count > 0 
-            ? beeList.First()
+            : _beeList.Count > 0 
+            ? _beeList.First()
             : null;
 
-        if(leaderBee == null)
+        if(_leaderBee == null)
         {
             GameManager.Instance.GameOver();
             return;
         }
 
-        leaderBee.SetLeader();
-        beeList.ForEach(x => x.SetFlockLeader(leaderBee));
+        _leaderBee.SetLeader();
+        _beeList.ForEach(x => x.SetFlockLeader(_leaderBee));
+    }
+
+    public void OnPublish(IMessage message)
+    {
+        if(message is EnemyKilledMessage)
+        {
+            _leaderBee.SetXDestination(FrontFlockPosition.position);
+            foreach (Bee bee in _beeList.Where(x => !x.IsLeader))
+            {
+                bee.SetXDestination(GetRandomXPosition());
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        Publisher.Unsubscribe(this, typeof(EnemyKilledMessage));
     }
 
 #if UNITY_EDITOR

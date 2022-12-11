@@ -10,9 +10,9 @@ public class Spawnable : MonoBehaviour
 
     public ESpawnableTypes SpawnableType => spawnableType;
 
-    [HideInInspector] public EObstacleType ObstacleType;
-    [HideInInspector] public EEnemyType EnemyType;
-    [HideInInspector] public EPickableType PickableType;
+    [HideInInspector] public EObstacleType ObstacleType = EObstacleType.None;
+    [HideInInspector] public EEnemyType EnemyType = EEnemyType.None;
+    [HideInInspector] public EPickableType PickableType = EPickableType.None;
     
     public delegate void OnDestroySpawnable();
     public OnDestroySpawnable onDestroySpawnable;
@@ -42,7 +42,7 @@ public class Spawnable : MonoBehaviour
             Kill();
     }
 
-    public void Kill()
+    public virtual void Kill()
     {
         onDestroySpawnable?.Invoke();
 

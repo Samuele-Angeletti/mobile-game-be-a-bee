@@ -136,7 +136,7 @@ MonoBehaviour:
   ObstacleType: 0
   EnemyType: 0
   PickableType: 0
-  pickableType: 2
+  pickableType: 3
 --- !u!50 &6612986942040993197
 Rigidbody2D:
   serializedVersion: 4

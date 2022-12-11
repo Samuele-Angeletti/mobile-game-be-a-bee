@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SpawnerManager : MonoBehaviour
+public class SpawnerManager : MonoBehaviour, ISubscriber
 {
     [Header("References")]
     [SerializeField] Transform spawnPosition;
@@ -20,94 +20,98 @@ public class SpawnerManager : MonoBehaviour
 
     float _timePassed;
     float _chanceSpawnRange => chanceSpawnEnemy + chanceSpawnPickable + chanceSpawnObstacle;
+    bool _spawningBoss;
+    List<Spawnable> _onGameSpawnableList;
 
-    List<Spawnable> _activeSpawnableList;
-    List<Spawnable> _notActiveSpawnableList;
     private void Awake()
     {
-        _activeSpawnableList = new List<Spawnable>();
-        _notActiveSpawnableList = new List<Spawnable>();
+        _onGameSpawnableList = new List<Spawnable>();
+
     }
 
     private void Start()
     {
-        GameManager.Instance.onGameOver += () => _activeSpawnableList.ForEach(x => x.Kill());
+        GameManager.Instance.onGameOver += () => _onGameSpawnableList.Where(x => x.gameObject.activeSelf).ToList().ForEach(x => x.Kill());
+
+        Publisher.Subscribe(this, typeof(SpawnObjectMessage));
+        Publisher.Subscribe(this, typeof(EnemyKilledMessage));
     }
 
     private void Update()
     {
-        if(GameManager.Instance.IsGameStarted)
+        if(GameManager.Instance.IsGamePlaying && !_spawningBoss)
         {
             _timePassed += Time.deltaTime;
             if(_timePassed >= timeSpawn)
             {
                 _timePassed = 0;
-                Spawn();
+                Spawn(null);
             }
         }
     }
 
-    private void Spawn()
+    public void Spawn(Spawnable spawnable)
     {
-        var spawnableType = GetSpawnType();
-        var selectedSpawnableList = spawnablePrefabList.Where(x => x.SpawnableType == spawnableType).ToList();
+        Spawnable selectedSpawnablePrefab;
 
-        var selectedSpawnablePrefab = selectedSpawnableList[UnityEngine.Random.Range(0, selectedSpawnableList.Count)];
-
-        // TODO: POOL FROM QUEUE - INHERIT EACH OBJECT FROM SPAWNABLE AND CHECK THERE THE TYPE AND THEN THE OBJECTTYPE
-
-        Vector3 spawnPos;
-
-        if (selectedSpawnablePrefab.SpawnableType == ESpawnableTypes.Obstacle)
+        if (spawnable == null)
         {
-            spawnPos = spawnPosition.position;
-            ObstacleSpawnable obstacleSpawnable = (ObstacleSpawnable)selectedSpawnablePrefab;
-            if(_notActiveSpawnableList.Any(x => x.ObstacleType == obstacleSpawnable.ObstacleType))
-            {
-                PoolSpawnable(_notActiveSpawnableList.Find(x => x.ObstacleType == obstacleSpawnable.ObstacleType), spawnPos);
-                return;
-            }
+            var spawnableType = GetSpawnType();
+            var selectedSpawnableList = spawnablePrefabList.Where(x => x.SpawnableType == spawnableType).ToList();
+
+            selectedSpawnablePrefab = selectedSpawnableList[UnityEngine.Random.Range(0, selectedSpawnableList.Count)];
         }
         else
-        {
-            spawnPos = GetRandomSpawnPosition();
+            selectedSpawnablePrefab = spawnable;
 
-            if(selectedSpawnablePrefab.SpawnableType == ESpawnableTypes.Enemy)
-            {
-                EnemySpawnable enemySpawnable = (EnemySpawnable)selectedSpawnablePrefab;
-                if(_notActiveSpawnableList.Any(x => x.EnemyType == enemySpawnable.EnemyType))
+        Vector3 spawnPos = spawnPosition.position;
+        List<Spawnable> notActiveSpawnableList = null;
+
+        switch (selectedSpawnablePrefab.SpawnableType)
+        {
+            case ESpawnableTypes.Pickable:
+                spawnPos = GetRandomSpawnPosition();
+                notActiveSpawnableList = _onGameSpawnableList.Where(x => !x.gameObject.activeSelf && x.SpawnableType == ESpawnableTypes.Pickable).ToList();
+                if (notActiveSpawnableList.Any(x => x.PickableType == selectedSpawnablePrefab.PickableType))
                 {
-                    PoolSpawnable(_notActiveSpawnableList.Find(x => x.EnemyType == enemySpawnable.EnemyType), spawnPos);
+                    PoolSpawnable(notActiveSpawnableList.Find(x => x.PickableType == selectedSpawnablePrefab.PickableType), spawnPos);
                     return;
                 }
-            }
-            else if(selectedSpawnablePrefab.SpawnableType == ESpawnableTypes.Pickable)
-            {
-                PickableSpawnable pickableSpawnable = (PickableSpawnable)selectedSpawnablePrefab;
-                if(_notActiveSpawnableList.Any(x => x.PickableType == pickableSpawnable.PickableType))
+                break;
+            case ESpawnableTypes.Enemy:
+                spawnPos = GetRandomSpawnPosition();
+                notActiveSpawnableList = _onGameSpawnableList.Where(x => !x.gameObject.activeSelf && x.SpawnableType == ESpawnableTypes.Enemy).ToList();
+                if (notActiveSpawnableList.Any(x => x.EnemyType == selectedSpawnablePrefab.EnemyType))
                 {
-                    PoolSpawnable(_notActiveSpawnableList.Find(x => x.PickableType == pickableSpawnable.PickableType), spawnPos);
+                    PoolSpawnable(notActiveSpawnableList.Find(x => x.EnemyType == selectedSpawnablePrefab.EnemyType), spawnPos);
                     return;
                 }
-            }
+                break;
+            case ESpawnableTypes.Obstacle:
+
+                notActiveSpawnableList = _onGameSpawnableList.Where(x => !x.gameObject.activeSelf && x.SpawnableType == ESpawnableTypes.Obstacle).ToList();
+
+                if (notActiveSpawnableList.Any(x => x.ObstacleType == selectedSpawnablePrefab.ObstacleType))
+                {
+                    PoolSpawnable(notActiveSpawnableList.Find(x => x.ObstacleType == selectedSpawnablePrefab.ObstacleType), spawnPos);
+                    return;
+                }
+                break;
+            case ESpawnableTypes.Boss:
+                _spawningBoss = true;
+                break;
         }
-            
 
         Spawnable newSpawnable = Instantiate(selectedSpawnablePrefab, spawnPos, Quaternion.identity);
         newSpawnable.Initialize(deathPosition.position);
 
-        newSpawnable.onDestroySpawnable += () => _notActiveSpawnableList.Add(newSpawnable);
-        newSpawnable.onDestroySpawnable += () => _activeSpawnableList.Remove(newSpawnable);
-
-        _activeSpawnableList.Add(newSpawnable);
+        _onGameSpawnableList.Add(newSpawnable);
     }
 
     private void PoolSpawnable(Spawnable selectedSpawnable, Vector3 spawnPos)
     {
-        _notActiveSpawnableList.Remove(selectedSpawnable);
-        selectedSpawnable.transform.position = spawnPos;
         selectedSpawnable.gameObject.SetActive(true);
-        _activeSpawnableList.Add(selectedSpawnable);
+        selectedSpawnable.transform.position = spawnPos;
     }
 
     private Vector3 GetRandomSpawnPosition()
@@ -129,6 +133,27 @@ public class SpawnerManager : MonoBehaviour
         }
 
         return ESpawnableTypes.Obstacle;
+    }
+
+    public void OnPublish(IMessage message)
+    {
+        if (message is SpawnObjectMessage spawnMessage)
+        {
+            Spawn(spawnMessage.ObjectToSpawn);
+        }
+        else if(message is EnemyKilledMessage enemyKilledMessage)
+        {
+            if(enemyKilledMessage.EnemyType == EEnemyType.Boss)
+            {
+                _spawningBoss = false;
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        Publisher.Unsubscribe(this, typeof(SpawnObjectMessage));
+        Publisher.Unsubscribe(this, typeof(EnemyKilledMessage));
     }
 
 #if UNITY_EDITOR

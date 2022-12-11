@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464560648389793629}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.42, y: 0, z: 0}
+  m_LocalPosition: {x: -12.92, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -72,6 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 464560648994880210}
   - component: {fileID: 464560648994880211}
+  - component: {fileID: 4593849631312725001}
   m_Layer: 0
   m_Name: SpawnerManager
   m_TagString: Untagged
@@ -110,15 +111,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPosition: {fileID: 464560648141746786}
   deathPosition: {fileID: 464560648389793628}
-  spawnYRange: 5.8
+  spawnYRange: 5
   spawnablePrefabList:
-  - {fileID: 6448237527242492075, guid: 62f75c3e86d5a644aa6234e6ac00a418, type: 3}
-  - {fileID: 7646754656557516279, guid: f1ac38bea2e0a39419d8eee527e9aea2, type: 3}
-  - {fileID: 2019405042183573380, guid: 8b16f37f7ab2659479eca9a8d10e7abc, type: 3}
-  timeSpawn: 6
-  chanceSpawnPickable: 30
-  chanceSpawnObstacle: 70
-  chanceSpawnEnemy: 90
-  activeGizmo: 1
+  - {fileID: 4318322765428556609, guid: cfeb3ba2dddb09b47a9cf373cf2831c5, type: 3}
+  - {fileID: 9193801836658237813, guid: fd1e82a8fe78aed4695a23850ec9e3a4, type: 3}
+  - {fileID: 5128832056673788597, guid: f3f776c62af19ec41a9d9f2236c614cb, type: 3}
+  - {fileID: 6347034654173616933, guid: 62f75c3e86d5a644aa6234e6ac00a418, type: 3}
+  - {fileID: 761542519504795974, guid: d600fe17759de8c419bdc2339331dea8, type: 3}
+  - {fileID: 1877789853209760501, guid: 3ab097a8dadde574daae5c8c5ac51159, type: 3}
+  - {fileID: 4308624861520627156, guid: f1ac38bea2e0a39419d8eee527e9aea2, type: 3}
+  - {fileID: 1177428397280794018, guid: 036d7f5ee6a5e9641851183ac5a4a0bd, type: 3}
+  - {fileID: 6985695347513491046, guid: aa5f8209b18e8e7429debd354f5791d5, type: 3}
+  - {fileID: 8604396232813191086, guid: 41b83f9318f11aa4f97f9977b27fad41, type: 3}
+  - {fileID: 5581968816961349564, guid: 7e8baa033e026654ca1833cc36c68464, type: 3}
+  - {fileID: 2793354109885726501, guid: b30a290172b1a4a4b8e78df072775124, type: 3}
+  - {fileID: 2284149537077699134, guid: 8b16f37f7ab2659479eca9a8d10e7abc, type: 3}
+  - {fileID: 957735172245310081, guid: 33608fb655ca0a040833fd0aca89e1ca, type: 3}
+  - {fileID: 4021583379808516279, guid: 30dd8ce17c708484687856e334333a3a, type: 3}
+  - {fileID: 6320744550613284922, guid: 53c20848902d9394ea662e0539f4c3c5, type: 3}
+  - {fileID: 8624474705907647355, guid: 96e8966e307f4e244bb44b3b4addbbbf, type: 3}
+  timeSpawn: 3
+  chanceSpawnPickable: 100
+  chanceSpawnObstacle: 30
+  chanceSpawnEnemy: 30
+  activeGizmo: 0
   radiusSphere: 0.2
   color: {r: 0, g: 1, b: 0.4793043, a: 1}
+--- !u!114 &4593849631312725001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464560648994880236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c75a536cf46898e489d158ae4185ad5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeTryCondition: 2
+  bossConditionList:
+  - BossPrefab: {fileID: 3477185393002570394, guid: 14eef612f73cb4f4dbbe8254632ee7d8, type: 3}
+    Meters: 50
+    Score: 50
+    MaxFlockHad: 10

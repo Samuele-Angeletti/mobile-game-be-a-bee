@@ -9,12 +9,12 @@ public class ObstacleSpawnable : Spawnable
     [SerializeField] BoxCollider2D middleCollider;
     [SerializeField] BoxCollider2D lowCollider;
 
+
     public override void Initialize(Vector3 deathPosition)
     {
         base.Initialize(deathPosition);
-        
-        ObstacleType = obstacleType;
 
+        ObstacleType = obstacleType;
         switch (obstacleType)
         {
             case EObstacleType.UpOnly:
@@ -53,6 +53,7 @@ public class ObstacleSpawnable : Spawnable
 
 public enum EObstacleType
 {
+    None,
     UpOnly,
     MiddleOnly,
     LowOnly,

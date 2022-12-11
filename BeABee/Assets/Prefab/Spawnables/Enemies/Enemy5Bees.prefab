@@ -408,7 +408,7 @@ MonoBehaviour:
   ObstacleType: 0
   EnemyType: 0
   PickableType: 0
-  enemyType: 3
+  enemyType: 4
   destroyAmount: {fileID: 5805994867340686620}
 --- !u!50 &5260264784780879661
 Rigidbody2D:

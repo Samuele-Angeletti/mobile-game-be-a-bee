@@ -11,7 +11,6 @@ public class PickableSpawnable : Spawnable
         base.Initialize(deathPosition);
 
         PickableType = pickableType;
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -27,6 +26,7 @@ public class PickableSpawnable : Spawnable
 
 public enum EPickableType
 {
+    None,
     AddOneBee,
     AddTwoBees,
     AddThreeBees,
