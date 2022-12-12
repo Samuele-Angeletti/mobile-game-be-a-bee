@@ -111,7 +111,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPosition: {fileID: 464560648141746786}
   deathPosition: {fileID: 464560648389793628}
-  spawnYRange: 5
+  spawnYRange: 4.5
   spawnablePrefabList:
   - {fileID: 4318322765428556609, guid: cfeb3ba2dddb09b47a9cf373cf2831c5, type: 3}
   - {fileID: 9193801836658237813, guid: fd1e82a8fe78aed4695a23850ec9e3a4, type: 3}
@@ -130,11 +130,11 @@ MonoBehaviour:
   - {fileID: 4021583379808516279, guid: 30dd8ce17c708484687856e334333a3a, type: 3}
   - {fileID: 6320744550613284922, guid: 53c20848902d9394ea662e0539f4c3c5, type: 3}
   - {fileID: 8624474705907647355, guid: 96e8966e307f4e244bb44b3b4addbbbf, type: 3}
-  timeSpawn: 3
+  timeSpawn: 5
   chanceSpawnPickable: 100
-  chanceSpawnObstacle: 30
-  chanceSpawnEnemy: 30
-  activeGizmo: 0
+  chanceSpawnObstacle: 50
+  chanceSpawnEnemy: 50
+  activeGizmo: 1
   radiusSphere: 0.2
   color: {r: 0, g: 1, b: 0.4793043, a: 1}
 --- !u!114 &4593849631312725001
@@ -153,5 +153,6 @@ MonoBehaviour:
   bossConditionList:
   - BossPrefab: {fileID: 3477185393002570394, guid: 14eef612f73cb4f4dbbe8254632ee7d8, type: 3}
     Meters: 50
-    Score: 50
-    MaxFlockHad: 10
+    Score: 10
+    MaxFlockHad: 5
+    CountToDestroyBoss: 0

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6320744550613284922}
   - component: {fileID: 4304966250246040864}
   - component: {fileID: 2040402799641450758}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PickableBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 324292309722786188}
   - component: {fileID: 8605371610892367870}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}

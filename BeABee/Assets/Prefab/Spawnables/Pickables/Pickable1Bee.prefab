@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5513875354357543816}
   - component: {fileID: 4569268697928150522}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 2284149537077699134}
   - component: {fileID: 8339375365677659940}
   - component: {fileID: 6076993902747747074}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Pickable1Bee
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -32,6 +32,7 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
     private void Start()
     {
         GameManager.Instance.onGameOver += () => _onGameSpawnableList.Where(x => x.gameObject.activeSelf).ToList().ForEach(x => x.Kill());
+        GameManager.Instance.onGameOver += () => _spawningBoss = false;
 
         Publisher.Subscribe(this, typeof(SpawnObjectMessage));
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));

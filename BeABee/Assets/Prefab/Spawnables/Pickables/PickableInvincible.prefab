@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8624474705907647355}
   - component: {fileID: 1997854804638439009}
   - component: {fileID: 4348073895592108615}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: PickableInvincible
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,7 +110,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2632247887124697805}
   - component: {fileID: 6299386072724245695}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Graphics
   m_TagString: Untagged
   m_Icon: {fileID: 0}

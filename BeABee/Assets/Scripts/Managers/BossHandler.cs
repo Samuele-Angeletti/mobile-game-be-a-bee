@@ -10,12 +10,12 @@ public class BossHandler : MonoBehaviour, ISubscriber
     [SerializeField] float timeTryCondition = 2;
     [SerializeField] List<BossCondition> bossConditionList;
 
-    BossCondition currentCondition;
+    BossCondition _currentCondition;
     SpawnerManager _spawnerManager;
     float _timePassed;
     bool _spawningBoss;
     int _index;
-
+    GameManager _gameManager;
     private void Awake()
     {
         _spawnerManager = GetComponent<SpawnerManager>();
@@ -24,8 +24,18 @@ public class BossHandler : MonoBehaviour, ISubscriber
     private void Start()
     {
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
+        _gameManager = GameManager.Instance;
+        _gameManager.onGameStart += () => _index = 0;
+        _gameManager.onGameStart += () => _currentCondition = bossConditionList.First();
+        _gameManager.onGameStart += () => Invoke(nameof(PublishCondition), 0.1f);
+        _gameManager.onGameOver += () => _spawningBoss = false;
 
-        currentCondition = NextCondition();
+        bossConditionList.ForEach(x => x.CountToDestroyBoss = x.BossPrefab.CountToDestroy);
+    }
+
+    private void PublishCondition()
+     {
+        Publisher.Publish(new BossConditionChangedMessage(_currentCondition));
     }
 
     public void OnPublish(IMessage message)
@@ -36,17 +46,18 @@ public class BossHandler : MonoBehaviour, ISubscriber
             {
                 _spawningBoss = false;
 
-                currentCondition = NextCondition();
+                _currentCondition = NextCondition();
+                PublishCondition();
 
-                if (currentCondition == null)
-                    GameManager.Instance.GameOver();
+                if (_currentCondition == null)
+                    _gameManager.GameOver();
             }
         }
     }
 
     private void Update()
     {
-        if(GameManager.Instance.IsGamePlaying && !_spawningBoss)
+        if(_gameManager.IsGamePlaying && !_spawningBoss)
         {
             _timePassed += Time.deltaTime;
             if(_timePassed >= timeTryCondition)
@@ -55,7 +66,7 @@ public class BossHandler : MonoBehaviour, ISubscriber
                 if(ConditionMet())
                 {
                     _spawningBoss = true;
-                    _spawnerManager.Spawn(currentCondition.BossPrefab);
+                    _spawnerManager.Spawn(_currentCondition.BossPrefab);
                 }
             }
         }
@@ -63,21 +74,34 @@ public class BossHandler : MonoBehaviour, ISubscriber
 
     private bool ConditionMet()
     {
-        return GameManager.Instance.MetersDone >= currentCondition.Meters
-            && GameManager.Instance.ScoreDone >= currentCondition.Score
-            && GameManager.Instance.FlockReached >= currentCondition.MaxFlockHad;
+        return _gameManager.MetersDone >= _currentCondition.Meters
+            && _gameManager.ScoreDone >= _currentCondition.Score
+            && _gameManager.FlockMax >= _currentCondition.MaxFlockHad;
     }
 
     private BossCondition NextCondition()
     {
-        if (currentCondition == null)
+        if (_currentCondition == null)
         {
             _index = 0;
             return bossConditionList.First();
         }
 
         if (_index + 1 >= bossConditionList.Count)
-            return null;
+        {
+            var newCondition = new BossCondition()
+            {
+                BossPrefab = bossConditionList[UnityEngine.Random.Range(0, bossConditionList.Count)].BossPrefab,
+                Meters = _currentCondition.Meters + UnityEngine.Random.Range(10, _currentCondition.Meters),
+                Score = _currentCondition.Score + UnityEngine.Random.Range(10, _currentCondition.Score + 1),
+                MaxFlockHad = _currentCondition.MaxFlockHad + UnityEngine.Random.Range(10, _currentCondition.MaxFlockHad + 1),
+                CountToDestroyBoss = _currentCondition.CountToDestroyBoss + UnityEngine.Random.Range(1, _currentCondition.CountToDestroyBoss + 1)
+            };
+
+            newCondition.SetBossCountToDestroy();
+
+            bossConditionList.Add(newCondition);
+        }
 
         _index++;
         return bossConditionList[_index];
@@ -91,4 +115,11 @@ public class BossCondition
     public float Meters;
     public int Score;
     public int MaxFlockHad;
+    public int CountToDestroyBoss;
+
+    public void SetBossCountToDestroy()
+    {
+        CountToDestroyBoss = Mathf.Clamp(CountToDestroyBoss, CountToDestroyBoss, MaxFlockHad);
+        BossPrefab.SetCountToDestroy(CountToDestroyBoss);
+    }
 }

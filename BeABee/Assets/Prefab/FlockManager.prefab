@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9076444657577680055}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.38, y: 4.54, z: 0}
+  m_LocalPosition: {x: -1.38, y: 3.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -86,7 +86,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9076444658495443074}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.71, y: -4.64, z: 0}
+  m_LocalPosition: {x: -7.71, y: -3.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -150,4 +150,8 @@ MonoBehaviour:
   MinPosition: {fileID: 9076444658495443077}
   MaxPosition: {fileID: 9076444657577680054}
   YRandomPositionOnJump: 1.06
+  invulnerableLayer: 9
+  invulnerableTime: 10
+  minBeesRequiredForBombAttack: 3
+  percentageUseBeeForBombAttack: 70
   activeGizmo: 1

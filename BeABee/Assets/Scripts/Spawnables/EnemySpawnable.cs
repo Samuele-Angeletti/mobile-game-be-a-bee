@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -11,6 +10,9 @@ public class EnemySpawnable : Spawnable
     int countToDestroy;
     int currentAttachedBees;
     List<Bee> attachedBees;
+
+    public delegate void OnDefeatEnemy();
+    public OnDefeatEnemy onDefeatEnemy;
 
     public override void Initialize(Vector3 deathPosition)
     {
@@ -49,6 +51,9 @@ public class EnemySpawnable : Spawnable
         if (currentAttachedBees >= countToDestroy)
         {
             Publisher.Publish(new EnemyKilledMessage(enemyType));
+
+            onDefeatEnemy?.Invoke();
+
             Kill();
         }
     }
@@ -64,14 +69,22 @@ public class EnemySpawnable : Spawnable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        var bee = collision.gameObject.GetComponent<Bee>();
-        if (bee != null)
+        if (collision.gameObject.TryGetComponent<Bee>(out var bee))
         {
-            if(!attachedBees.Contains(bee))
+            if (EnemyType != EEnemyType.Boss && bee.IsInvulnerable)
+            {
+                Publisher.Publish(new EnemyKilledMessage(enemyType));
+                Kill();
+            }
+
+            if (!attachedBees.Contains(bee))
             {
                 attachedBees.Add(bee);
                 currentAttachedBees++;
                 destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
+
+                if (bee.Attacking)
+                    currentAttachedBees++;
             }
         }
     }
@@ -81,11 +94,14 @@ public class EnemySpawnable : Spawnable
         var bee = collision.gameObject.GetComponent<Bee>();
         if (bee != null && currentAttachedBees > 0)
         {
-            if(attachedBees.Contains(bee))
+            if (attachedBees.Contains(bee))
             {
                 attachedBees.Remove(bee);
                 currentAttachedBees--;
                 destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
+
+                if (bee.Attacking)
+                    currentAttachedBees--;
             }
         }
     }

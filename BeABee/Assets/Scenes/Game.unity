@@ -252,6 +252,17 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &743415281 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9076444658779208100, guid: 17696e386285bca469b62acf4f183477, type: 3}
+  m_PrefabInstance: {fileID: 9076444658700130569}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5983a5e6d89be409941c287b32d745, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &777278232
 GameObject:
   m_ObjectHideFlags: 0
@@ -512,38 +523,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnerManager
       objectReference: {fileID: 0}
-    - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
-      propertyPath: bossConditionList.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
-      propertyPath: bossConditionList.Array.data[0].Score
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
-      propertyPath: bossConditionList.Array.data[1].Score
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
-      propertyPath: bossConditionList.Array.data[0].Meters
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
-      propertyPath: bossConditionList.Array.data[1].Meters
-      value: 500
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
-      propertyPath: bossConditionList.Array.data[1].BossPrefab
-      value: 
-      objectReference: {fileID: 3477185393002570394, guid: 14eef612f73cb4f4dbbe8254632ee7d8, type: 3}
-    - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
-      propertyPath: bossConditionList.Array.data[0].MaxFlockHad
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
-      propertyPath: bossConditionList.Array.data[1].MaxFlockHad
-      value: 500
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
 --- !u!1001 &1847391915877466356
@@ -610,6 +589,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 79328757, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 743415281}
     - target: {fileID: 3423584336008663354, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
       propertyPath: m_Name
       value: UIManager

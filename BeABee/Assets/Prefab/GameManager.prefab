@@ -44,4 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacf987ce1164424f8f5ab99a585a6b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsGameStarted: 0
+  increaseSpeedAfterMeters: 150
+  speedIncreaser: 0.1
+  IsGamePlaying: 0
+  MetersDone: 0
+  ScoreDone: 0
+  FlockMax: 0
+  CurrentFlock: 0

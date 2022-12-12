@@ -16,17 +16,37 @@ public class FlockManager : MonoBehaviour, ISubscriber
     public Transform MinPosition;
     public Transform MaxPosition;
     public float YRandomPositionOnJump;
+    [Header("Specials Settings")]
+    [SerializeField] int invulnerableLayer;
+    [SerializeField] float invulnerableTime;
+    [Space(10)]
+    [SerializeField] int minBeesRequiredForBombAttack;
+    [SerializeField, Range(1, 100)] int percentageUseBeeForBombAttack;
+    
+    private int _bombQuantity;
+    public int BombQuantity
+    {
+        get { return _bombQuantity; }
+        set { 
+            _bombQuantity = value; 
+            if (_uiPlayArea != null) _uiPlayArea.UpdateBombQuantity(_bombQuantity);
+            if (_bombQuantity == 0) _uiPlayArea.EnableBombButton(false); 
+        }
+    }
 
-    public int ActiveBeeCount => _beeList.Where(x => x.gameObject.activeSelf).Count();
+    public int ActiveBeeCount => _activeBeeList.Count;
 
-    List<Bee> _beeList;
+    List<Bee> _activeBeeList;
+    List<Bee> BombAttackRequiredBees => _activeBeeList.Where(x => !x.IsLeader && x.CanMove).ToList();
     Bee _leaderBee;
-
     Queue<Bee> _beeQueue;
+    Coroutine _invulnerableCoroutine;
+    UIPlayArea _uiPlayArea;
     private void Awake()
     {
-        _beeList = new List<Bee>();
+        _activeBeeList = new List<Bee>();
         _beeQueue = new Queue<Bee>();
+        _uiPlayArea = FindObjectOfType<UIPlayArea>();
     }
 
     private void Start()
@@ -34,7 +54,8 @@ public class FlockManager : MonoBehaviour, ISubscriber
         FrontFlockPosition.transform.parent = null;
         MinPosition.transform.parent = null;
         MaxPosition.transform.parent = null;
-
+        if (minBeesRequiredForBombAttack <= 1)
+            minBeesRequiredForBombAttack = 2;
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
     }
 
@@ -55,15 +76,18 @@ public class FlockManager : MonoBehaviour, ISubscriber
         else
         {
             newBee.onKilled += () => _beeQueue.Enqueue(newBee);
-            newBee.onKilled += () => _beeList.Remove(newBee);
+            newBee.onKilled += () => _activeBeeList.Remove(newBee);
+            newBee.onKilled += () => EnableBombButtonCheck();
         }
 
         newBee.Initialize(isLeader, sprite, this);
-        _beeList.Add(newBee);
+        _activeBeeList.Add(newBee);
         if(_leaderBee != null)
-            _beeList.ForEach(x => x.SetFlockLeader(_leaderBee));
+            _activeBeeList.ForEach(x => x.SetFlockLeader(_leaderBee));
         if (!newBee.IsLeader)
             newBee.SetXDestination(newBee.transform.position);
+
+        GameManager.Instance.FlockMax++;
 
         return newBee;
     }
@@ -79,16 +103,27 @@ public class FlockManager : MonoBehaviour, ISubscriber
             transform.position = _leaderBee.transform.position;
         else
             transform.position = Vector3.zero;
+
+        if(BombQuantity > 0 && BombAttackRequiredBees.Count >= minBeesRequiredForBombAttack)
+        {
+            _uiPlayArea.EnableBombButton(true);
+        }
+    }
+
+    private void EnableBombButtonCheck()
+    {
+        if (BombAttackRequiredBees.Count < minBeesRequiredForBombAttack)
+            _uiPlayArea.EnableBombButton(false);
     }
 
     private Vector3 GetRandomXPosition()
     {
-        return new Vector3(Random.Range(MinPosition.position.x, MaxPosition.position.x), Random.Range(MinPosition.position.y, MaxPosition.position.y), 0);
+        return new Vector3(Random.Range(MinPosition.position.x, MaxPosition.position.x), 0, 0);
     }
 
     public void Jump()
     {
-        foreach (var bee in _beeList)
+        foreach (var bee in _activeBeeList)
         {
             bee.SetRandomY(-YRandomPositionOnJump, YRandomPositionOnJump);
             bee.Jump();
@@ -99,8 +134,8 @@ public class FlockManager : MonoBehaviour, ISubscriber
     {
         _leaderBee = bee != null 
             ? bee 
-            : _beeList.Count > 0 
-            ? _beeList.First()
+            : _activeBeeList.Count > 0 
+            ? _activeBeeList.First()
             : null;
 
         if(_leaderBee == null)
@@ -110,7 +145,44 @@ public class FlockManager : MonoBehaviour, ISubscriber
         }
 
         _leaderBee.SetLeader();
-        _beeList.ForEach(x => x.SetFlockLeader(_leaderBee));
+        _activeBeeList.ForEach(x => x.SetFlockLeader(_leaderBee));
+    }
+
+    public void SetInvulnerableFlock()
+    {
+        if (_invulnerableCoroutine == null)
+            _invulnerableCoroutine = StartCoroutine(InvulnerableCoroutine());
+        else
+        {
+            StopCoroutine(_invulnerableCoroutine);
+            _invulnerableCoroutine = StartCoroutine(InvulnerableCoroutine());
+        }
+    }
+
+    private IEnumerator InvulnerableCoroutine()
+    {
+        _activeBeeList.ForEach(x => x.SetInvulnerable(true, invulnerableLayer));
+        yield return new WaitForSeconds(invulnerableTime);
+        _activeBeeList.ForEach(x => x.SetInvulnerable(false, -1));
+    }
+
+    public void UseBomb()
+    {
+        if(BombQuantity > 0 && BombAttackRequiredBees.Count >= minBeesRequiredForBombAttack)
+        {
+            BombQuantity--;
+            int beeToUse = BombAttackRequiredBees.Count * percentageUseBeeForBombAttack / 100;
+            List<Bee> selectedBees = new List<Bee>();
+            while (selectedBees.Count < beeToUse)
+            {
+                var randomBee = BombAttackRequiredBees[Random.Range(0, BombAttackRequiredBees.Count)];
+                if (!selectedBees.Contains(randomBee))
+                {
+                    selectedBees.Add(randomBee);
+                }
+            }
+            selectedBees.ForEach(x => x.BombAttack());
+        }
     }
 
     public void OnPublish(IMessage message)
@@ -118,7 +190,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
         if(message is EnemyKilledMessage)
         {
             _leaderBee.SetXDestination(FrontFlockPosition.position);
-            foreach (Bee bee in _beeList.Where(x => !x.IsLeader))
+            foreach (Bee bee in _activeBeeList.Where(x => !x.IsLeader))
             {
                 bee.SetXDestination(GetRandomXPosition());
             }
@@ -153,7 +225,6 @@ public class FlockManager : MonoBehaviour, ISubscriber
                 Gizmos.color = Color.red;
                 Gizmos.DrawSphere(MinPosition.position, 0.3f);
                 Gizmos.DrawSphere(MaxPosition.position, 0.3f);
-
                 Gizmos.color = Color.yellow;
                 Gizmos.DrawLine(MinPosition.position, new Vector3(MinPosition.position.x, MaxPosition.position.y, 0));
                 Gizmos.DrawLine(MinPosition.position, new Vector3(MaxPosition.position.x, MinPosition.position.y, 0));

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviour, ISubscriber
 {
     #region SINGLETON
     private static GameManager instance;
@@ -29,42 +30,49 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    [Header("Game Settings")]
+    [SerializeField] int increaseSpeedAfterMeters = 200;
+    [SerializeField] float speedIncreaser = 0.1f;
+
     [HideInInspector] public bool IsGamePlaying;
     [HideInInspector] public float MetersDone = 0;
     [HideInInspector] public int ScoreDone = 0;
-    [HideInInspector] public int FlockReached = 0;
+    [HideInInspector] public int FlockMax = 0;
+    [HideInInspector] public int CurrentFlock = 0;
 
-    public delegate void OnGameOver();
-    public OnGameOver onGameOver;
+    public delegate void OnGameStateChange();
+    public OnGameStateChange onGameOver;
+    public OnGameStateChange onGameStart;
 
-    InputSystem inputSystem;
-    FlockManager flockManager;
-    SpawnerManager spawnerManager;
-    UIManager uiManager;
-
-
+    InputSystem _inputSystem;
+    FlockManager _flockManager;
+    UIManager _uiManager;
+    
     private void Awake()
     {
-        inputSystem = new InputSystem();
+        _inputSystem = new InputSystem();
 
-        inputSystem.Player.Enable();
-        inputSystem.Player.TouchScreen.performed += JumpPerformed;
-        inputSystem.Player.JumpDEMO.performed += JumpPerformed;
+        _inputSystem.Player.Enable();
+        _inputSystem.Player.TouchScreen.performed += JumpPerformed;
+        _inputSystem.Player.JumpDEMO.performed += JumpPerformed;
 
-        uiManager = FindObjectOfType<UIManager>();
-        flockManager = FindObjectOfType<FlockManager>();
-        spawnerManager = FindObjectOfType<SpawnerManager>();
+        _uiManager = FindObjectOfType<UIManager>();
+        _flockManager = FindObjectOfType<FlockManager>();
     }
-
+    private void Start()
+    {
+        Publisher.Subscribe(this, typeof(EnemyKilledMessage));
+    }
     private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        flockManager.Jump();
+        _flockManager.Jump();
     }
 
     public void StartGame()
     {
-        flockManager.Initialize();
+        _flockManager.Initialize();
         IsGamePlaying = true;
+        onGameStart?.Invoke();
     }
 
     public void GameOver()
@@ -73,11 +81,13 @@ public class GameManager : MonoBehaviour
 
         onGameOver?.Invoke();
 
+        Time.timeScale = 1;
         MetersDone = 0;
-        FlockReached = 0;
+        FlockMax = 0;
         ScoreDone = 0;
+        CurrentFlock = 0;
 
-        uiManager.ResetMenu();
+        _uiManager.ResetMenu();
     }
 
     private void Update()
@@ -86,7 +96,41 @@ public class GameManager : MonoBehaviour
         {
             MetersDone += Time.deltaTime;
 
-            FlockReached = flockManager.ActiveBeeCount;
+            if (MetersDone % increaseSpeedAfterMeters == 0)
+                Time.timeScale += speedIncreaser;
+
+            CurrentFlock = _flockManager.ActiveBeeCount;
+        }
+    }
+
+    public void OnPublish(IMessage message)
+    {
+        if(message is EnemyKilledMessage enemyKilledMsg)
+        {
+            switch (enemyKilledMsg.EnemyType)
+            {
+                case EEnemyType.TwoBees:
+                    ScoreDone += 10;
+                    break;
+                case EEnemyType.ThreeBees:
+                    ScoreDone += 20;
+                    break;
+                case EEnemyType.FourBees:
+                    ScoreDone += 30;
+                    break;
+                case EEnemyType.FiveBees:
+                    ScoreDone += 40;
+                    break;
+                case EEnemyType.SixBees:
+                    ScoreDone += 50;
+                    break;
+                case EEnemyType.SevenBees:
+                    ScoreDone += 60;
+                    break;
+                case EEnemyType.Boss:
+                    ScoreDone += 100;
+                    break;
+            }
         }
     }
 }
