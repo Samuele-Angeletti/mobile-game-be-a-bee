@@ -252,6 +252,11 @@ MonoBehaviour:
   m_CameraActivatedEvent:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &545637818 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 545637818, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+  m_PrefabInstance: {fileID: 3423584337673943264}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &743415281 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9076444658779208100, guid: 17696e386285bca469b62acf4f183477, type: 3}
@@ -289,7 +294,7 @@ Transform:
   m_GameObject: {fileID: 777278232}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.11, y: 2.11, z: 2.11}
+  m_LocalScale: {x: 2.2, y: 2.2, z: 2.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1793349515}
@@ -580,6 +585,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DeathBounding
       objectReference: {fileID: 0}
+    - target: {fileID: 6199689880251249266, guid: 47d43334f039b334993065e72b7d876b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47d43334f039b334993065e72b7d876b, type: 3}
 --- !u!1001 &3423584337673943264
@@ -593,6 +602,22 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 743415281}
+    - target: {fileID: 545637819, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -47.284912
+      objectReference: {fileID: 0}
+    - target: {fileID: 1556737551451615888, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2032442541}
+    - target: {fileID: 2979388176609150705, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: pausePanel
+      value: 
+      objectReference: {fileID: 545637818}
+    - target: {fileID: 3423584335947005707, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2032442541}
     - target: {fileID: 3423584336008663354, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
       propertyPath: m_Name
       value: UIManager
@@ -685,6 +710,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 2032442541}
+    - target: {fileID: 4881302089124380554, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -35.61206
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
 --- !u!1001 &4406536170455030190

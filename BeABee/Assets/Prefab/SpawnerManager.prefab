@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464560648141746787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11.56, y: 0, z: 0}
+  m_LocalPosition: {x: 13.88, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -55,7 +55,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464560648389793629}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -12.92, y: 0, z: 0}
+  m_LocalPosition: {x: -14.18, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -152,7 +152,17 @@ MonoBehaviour:
   timeTryCondition: 2
   bossConditionList:
   - BossPrefab: {fileID: 3477185393002570394, guid: 14eef612f73cb4f4dbbe8254632ee7d8, type: 3}
-    Meters: 50
-    Score: 10
+    Meters: 100
+    Score: 40
     MaxFlockHad: 5
-    CountToDestroyBoss: 0
+    CountToDestroyBoss: 5
+  - BossPrefab: {fileID: 3477185393002570394, guid: a985a7fa681b923408a34ba45c25d3cd, type: 3}
+    Meters: 200
+    Score: 100
+    MaxFlockHad: 10
+    CountToDestroyBoss: 7
+  - BossPrefab: {fileID: 3477185393002570394, guid: 05e622744b4fc624598aa0b6160b8f86, type: 3}
+    Meters: 300
+    Score: 180
+    MaxFlockHad: 30
+    CountToDestroyBoss: 12

@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bacf987ce1164424f8f5ab99a585a6b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  increaseSpeedAfterMeters: 150
+  increaseSpeedAfterMeters: 100
   speedIncreaser: 0.1
   IsGamePlaying: 0
   MetersDone: 0

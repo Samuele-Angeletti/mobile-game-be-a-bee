@@ -22,7 +22,6 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
     float _chanceSpawnRange => chanceSpawnEnemy + chanceSpawnPickable + chanceSpawnObstacle;
     bool _spawningBoss;
     List<Spawnable> _onGameSpawnableList;
-
     private void Awake()
     {
         _onGameSpawnableList = new List<Spawnable>();
@@ -36,6 +35,7 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
 
         Publisher.Subscribe(this, typeof(SpawnObjectMessage));
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
+        Publisher.Subscribe(this, typeof(BossConditionMetMessage));
     }
 
     private void Update()
@@ -100,6 +100,7 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
                 break;
             case ESpawnableTypes.Boss:
                 _spawningBoss = true;
+                
                 break;
         }
 
@@ -155,6 +156,7 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
     {
         Publisher.Unsubscribe(this, typeof(SpawnObjectMessage));
         Publisher.Unsubscribe(this, typeof(EnemyKilledMessage));
+        Publisher.Unsubscribe(this, typeof(BossConditionMetMessage));
     }
 
 #if UNITY_EDITOR

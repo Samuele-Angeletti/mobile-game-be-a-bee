@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIPlayArea : MonoBehaviour, ISubscriber
@@ -23,6 +21,8 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
     [SerializeField] TextMeshProUGUI flockConditionValue;
     [SerializeField] TextMeshProUGUI scoreConditionValue;
 
+    [Header("Pause Panel")]
+    [SerializeField] GameObject pausePanel;
     GameManager _gameManager;
     private void Start()
     {
@@ -39,7 +39,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
         currentFlockValue.text = string.Empty;
 
         bombButton.interactable = false;
-        bombQuantityValue.text = string.Empty;
+        bombQuantityValue.text = "x 0";
 
         bossNameValue.text = string.Empty;
         meterConditionValue.text = string.Empty;
@@ -61,7 +61,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
 
     private void Update()
     {
-        if(_gameManager.IsGamePlaying)
+        if (_gameManager.IsGamePlaying)
         {
             meterValue.text = $"{(int)_gameManager.MetersDone}";
             scoreValue.text = $"{_gameManager.ScoreDone}";
@@ -72,7 +72,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
 
     public void OnPublish(IMessage message)
     {
-        if(message is BossConditionChangedMessage bossConditionMessage)
+        if (message is BossConditionChangedMessage bossConditionMessage)
         {
             var condition = bossConditionMessage.BossCondition;
             if (condition == null)
@@ -88,5 +88,10 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
     private void OnDestroy()
     {
         Publisher.Unsubscribe(this, typeof(BossConditionChangedMessage));
+    }
+
+    public void HandlePausePanel()
+    {
+        pausePanel.SetActive(!pausePanel.activeSelf);
     }
 }

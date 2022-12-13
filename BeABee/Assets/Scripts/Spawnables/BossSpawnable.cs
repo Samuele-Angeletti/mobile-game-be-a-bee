@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal.Profiling.Memory.Experimental.FileFormat;
 using UnityEngine;
 
 public class BossSpawnable : EnemySpawnable
@@ -17,4 +14,9 @@ public class BossSpawnable : EnemySpawnable
         onDefeatEnemy += () => Publisher.Publish(new SpawnObjectMessage(LootOnDestroy));
     }
 
+    public override void SetCountToDestroy(int amount)
+    {
+        countToDestroyBoss = amount;
+        base.SetCountToDestroy(amount);
+    }
 }

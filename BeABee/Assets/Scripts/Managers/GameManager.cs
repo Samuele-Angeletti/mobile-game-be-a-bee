@@ -47,7 +47,8 @@ public class GameManager : MonoBehaviour, ISubscriber
     InputSystem _inputSystem;
     FlockManager _flockManager;
     UIManager _uiManager;
-    
+    private float _meterStep;
+    private float _lastTimeScale;
     private void Awake()
     {
         _inputSystem = new InputSystem();
@@ -96,11 +97,20 @@ public class GameManager : MonoBehaviour, ISubscriber
         {
             MetersDone += Time.deltaTime;
 
-            if (MetersDone % increaseSpeedAfterMeters == 0)
-                Time.timeScale += speedIncreaser;
+            _meterStep += Time.deltaTime;
+            if(_meterStep >= increaseSpeedAfterMeters)
+            {
+                _meterStep = 0;
+                IncreaseGameSpeed();
+            }
 
             CurrentFlock = _flockManager.ActiveBeeCount;
         }
+    }
+
+    public void IncreaseGameSpeed()
+    {
+        Time.timeScale += speedIncreaser;
     }
 
     public void OnPublish(IMessage message)
@@ -129,8 +139,33 @@ public class GameManager : MonoBehaviour, ISubscriber
                     break;
                 case EEnemyType.Boss:
                     ScoreDone += 100;
+                    IncreaseGameSpeed();
                     break;
             }
         }
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+
+    public void PauseGame()
+    {
+        if(Time.timeScale == 0)
+        {
+            ResumeGame();
+            return;
+        }
+
+        _lastTimeScale = Time.timeScale;
+        Time.timeScale = 0;
+        IsGamePlaying = false;
+    }
+
+    private void ResumeGame()
+    {
+        Time.timeScale = _lastTimeScale;
+        IsGamePlaying = true;
     }
 }

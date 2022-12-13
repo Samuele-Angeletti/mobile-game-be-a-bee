@@ -106,9 +106,10 @@ public class EnemySpawnable : Spawnable
         }
     }
 
-    public void SetCountToDestroy(int amount)
+    public virtual void SetCountToDestroy(int amount)
     {
         countToDestroy = amount;
+        destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
     }
 }
 

@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -25,24 +24,30 @@ public class BossHandler : MonoBehaviour, ISubscriber
     {
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
         _gameManager = GameManager.Instance;
-        _gameManager.onGameStart += () => _index = 0;
-        _gameManager.onGameStart += () => _currentCondition = bossConditionList.First();
-        _gameManager.onGameStart += () => Invoke(nameof(PublishCondition), 0.1f);
+        _gameManager.onGameStart += () => Initialize();
         _gameManager.onGameOver += () => _spawningBoss = false;
+        _gameManager.onGameOver += () => _currentCondition = null;
 
         bossConditionList.ForEach(x => x.CountToDestroyBoss = x.BossPrefab.CountToDestroy);
     }
 
+    private void Initialize()
+    {
+        _index = 0;
+        _currentCondition = NextCondition();
+        Invoke(nameof(PublishCondition), 0.1f);
+    }
+
     private void PublishCondition()
-     {
+    {
         Publisher.Publish(new BossConditionChangedMessage(_currentCondition));
     }
 
     public void OnPublish(IMessage message)
     {
-        if(message is EnemyKilledMessage enemyKilled)
+        if (message is EnemyKilledMessage enemyKilled)
         {
-            if(enemyKilled.EnemyType == EEnemyType.Boss)
+            if (enemyKilled.EnemyType == EEnemyType.Boss)
             {
                 _spawningBoss = false;
 
@@ -57,16 +62,17 @@ public class BossHandler : MonoBehaviour, ISubscriber
 
     private void Update()
     {
-        if(_gameManager.IsGamePlaying && !_spawningBoss)
+        if (_gameManager.IsGamePlaying && !_spawningBoss)
         {
             _timePassed += Time.deltaTime;
-            if(_timePassed >= timeTryCondition)
+            if (_timePassed >= timeTryCondition)
             {
                 _timePassed = 0;
-                if(ConditionMet())
+                if (ConditionMet())
                 {
                     _spawningBoss = true;
                     _spawnerManager.Spawn(_currentCondition.BossPrefab);
+                    Publisher.Publish(new BossConditionMetMessage());
                 }
             }
         }
@@ -84,7 +90,9 @@ public class BossHandler : MonoBehaviour, ISubscriber
         if (_currentCondition == null)
         {
             _index = 0;
-            return bossConditionList.First();
+            var bossCondition = bossConditionList.First();
+            bossCondition.SetBossCountToDestroy();
+            return bossCondition;
         }
 
         if (_index + 1 >= bossConditionList.Count)
@@ -119,7 +127,7 @@ public class BossCondition
 
     public void SetBossCountToDestroy()
     {
-        CountToDestroyBoss = Mathf.Clamp(CountToDestroyBoss, CountToDestroyBoss, MaxFlockHad);
+        CountToDestroyBoss = Mathf.Clamp(CountToDestroyBoss, 1, MaxFlockHad);
         BossPrefab.SetCountToDestroy(CountToDestroyBoss);
     }
 }

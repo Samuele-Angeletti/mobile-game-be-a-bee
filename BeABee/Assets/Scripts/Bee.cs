@@ -1,8 +1,13 @@
+using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Bee : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] GameObject _leaderPointerRenderer;
+    [SerializeField] Image warningImage;
+    [SerializeField] TextMeshProUGUI invulnerableText;
+    [Header("Settings")]
     [SerializeField] float _jumpForce;
     [SerializeField] float _jumpHeigth;
     [SerializeField] float _gravity;
@@ -13,7 +18,8 @@ public class Bee : MonoBehaviour
     [SerializeField] float _slowDownDistance;
     [SerializeField] SpriteRenderer invulnerableGraphics;
     [SerializeField] float speedChangeColor;
-
+    [SerializeField] float bombAttackSpeed;
+    
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
     private Vector3 _destinationFlap;
@@ -40,6 +46,7 @@ public class Bee : MonoBehaviour
     public delegate void OnKilled();
     public OnKilled onKilled;
     private int _originalLayer;
+    private Vector3 _bombAttackXDestination;
     private void Awake()
     {
         _rigidbody2D = gameObject.SearchComponent<Rigidbody2D>();
@@ -50,7 +57,7 @@ public class Bee : MonoBehaviour
         _originalLayer = gameObject.layer;
     }
 
-    public void Initialize(bool isLeader, Sprite initialSprite, FlockManager flockManager)
+    public void Initialize(bool isLeader, Sprite initialSprite, FlockManager flockManager, Vector3 bombAttackDestination)
     {
         IsLeader = isLeader;
         ChangeSprite(initialSprite);
@@ -63,6 +70,7 @@ public class Bee : MonoBehaviour
         _blueToGreen = true;
         _isInvulnerable = false;
         _invulnerableTimer = 0;
+        _bombAttackXDestination = bombAttackDestination;
     }
 
     public void ChangeSprite(Sprite initialSprite)
@@ -75,6 +83,9 @@ public class Bee : MonoBehaviour
         onKilled?.Invoke();
         _rigidbody2D.velocity = Vector2.zero;
         _verticalMove = 0;
+
+        UpdateInvlunerableText(false, -1);
+        ActiveWarning(false);
 
         if (_isInvulnerable)
         {
@@ -154,7 +165,8 @@ public class Bee : MonoBehaviour
 
     public void Jump()
     {
-        _jumping = true;
+        if(_canMove)
+            _jumping = true;
     }
 
     void FixedUpdate()
@@ -198,9 +210,9 @@ public class Bee : MonoBehaviour
                 GoToXDestination(_xDestination, _forwardSpeed);
             }
         }
-        else if (_attacking)
+        else if (_canMove && _attacking)
         {
-            GoToXDestination(Vector3.right * 10, _forwardSpeed * 5);
+            GoToXDestination(_bombAttackXDestination, bombAttackSpeed);
         }
     }
 
@@ -254,9 +266,10 @@ public class Bee : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponentInParent<DeathWall>() != null || collision.GetComponentInParent<ObstacleSpawnable>() != null)
+        bool isDeathWall = collision.GetComponentInParent<DeathWall>() != null;
+        if (isDeathWall || collision.GetComponentInParent<ObstacleSpawnable>() != null)
         {
-            if (_isInvulnerable)
+            if (_isInvulnerable && !isDeathWall)
                 return;
 
             if (!_canMove)
@@ -271,6 +284,8 @@ public class Bee : MonoBehaviour
             _rigidbody2D.velocity = enemySpawnable.Rigidbody.velocity;
             _verticalMove = 0;
             _canMove = false;
+            _jumping = false;
+            _goingUp = false;
             transform.parent = enemySpawnable.transform;
         }
     }
@@ -342,5 +357,26 @@ public class Bee : MonoBehaviour
             SetInvulnerable(false, -1);
         }
 
+    }
+
+    public void UpdateInvlunerableText(bool active, int amount)
+    {
+        if (!active)
+        {
+            invulnerableText.gameObject.SetActive(false);
+            return;
+        }
+
+        if (!invulnerableText.gameObject.activeSelf)
+        {
+            invulnerableText.gameObject.SetActive(true);
+        }
+
+        invulnerableText.text = amount.ToString();
+    }
+
+    public void ActiveWarning(bool active)
+    {
+        warningImage.gameObject.SetActive(active);
     }
 }

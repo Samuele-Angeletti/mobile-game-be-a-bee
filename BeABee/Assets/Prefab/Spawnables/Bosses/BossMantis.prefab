@@ -368,7 +368,7 @@ GameObject:
   - component: {fileID: 6172083554367268397}
   - component: {fileID: 8235145543378391563}
   m_Layer: 10
-  m_Name: BossMantis5Bees
+  m_Name: BossMantis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

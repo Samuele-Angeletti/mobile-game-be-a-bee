@@ -18,11 +18,13 @@ public class FlockManager : MonoBehaviour, ISubscriber
     public float YRandomPositionOnJump;
     [Header("Specials Settings")]
     [SerializeField] int invulnerableLayer;
-    [SerializeField] float invulnerableTime;
+    [SerializeField] int invulnerableTime;
     [Space(10)]
     [SerializeField] int minBeesRequiredForBombAttack;
     [SerializeField, Range(1, 100)] int percentageUseBeeForBombAttack;
-    
+    [SerializeField] Transform bombAttackDestination;
+    [Space(10)]
+    [SerializeField] float timeDisplayWarning;
     private int _bombQuantity;
     public int BombQuantity
     {
@@ -54,9 +56,14 @@ public class FlockManager : MonoBehaviour, ISubscriber
         FrontFlockPosition.transform.parent = null;
         MinPosition.transform.parent = null;
         MaxPosition.transform.parent = null;
+        bombAttackDestination.transform.parent = null;
+
+        GameManager.Instance.onGameOver += () => BombQuantity = 0;
+
         if (minBeesRequiredForBombAttack <= 1)
             minBeesRequiredForBombAttack = 2;
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
+        Publisher.Subscribe(this, typeof(BossConditionMetMessage));
     }
 
     public void Initialize()
@@ -80,7 +87,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
             newBee.onKilled += () => EnableBombButtonCheck();
         }
 
-        newBee.Initialize(isLeader, sprite, this);
+        newBee.Initialize(isLeader, sprite, this, bombAttackDestination.position);
         _activeBeeList.Add(newBee);
         if(_leaderBee != null)
             _activeBeeList.ForEach(x => x.SetFlockLeader(_leaderBee));
@@ -162,12 +169,22 @@ public class FlockManager : MonoBehaviour, ISubscriber
     private IEnumerator InvulnerableCoroutine()
     {
         _activeBeeList.ForEach(x => x.SetInvulnerable(true, invulnerableLayer));
-        yield return new WaitForSeconds(invulnerableTime);
+        int i = invulnerableTime;
+        while(i > 0)
+        {
+            _leaderBee.UpdateInvlunerableText(true, i);
+            yield return new WaitForSeconds(1);
+            i--;
+        }
+        _leaderBee.UpdateInvlunerableText(false, 0);
         _activeBeeList.ForEach(x => x.SetInvulnerable(false, -1));
     }
 
     public void UseBomb()
     {
+        if (!GameManager.Instance.IsGamePlaying)
+            return;
+
         if(BombQuantity > 0 && BombAttackRequiredBees.Count >= minBeesRequiredForBombAttack)
         {
             BombQuantity--;
@@ -195,11 +212,26 @@ public class FlockManager : MonoBehaviour, ISubscriber
                 bee.SetXDestination(GetRandomXPosition());
             }
         }
+        else if(message is BossConditionMetMessage)
+        {
+            _leaderBee.ActiveWarning(true);
+            StartCoroutine(WarningMessageCoroutine());
+        }
+    }
+
+    private IEnumerator WarningMessageCoroutine()
+    {
+        var currentLeader = _leaderBee;
+        yield return new WaitForSeconds(timeDisplayWarning);
+        if(currentLeader.gameObject.activeSelf)
+            currentLeader.ActiveWarning(false);
     }
 
     private void OnDisable()
     {
         Publisher.Unsubscribe(this, typeof(EnemyKilledMessage));
+        Publisher.Unsubscribe(this, typeof(BossConditionMetMessage));
+
     }
 
 #if UNITY_EDITOR
@@ -230,6 +262,12 @@ public class FlockManager : MonoBehaviour, ISubscriber
                 Gizmos.DrawLine(MinPosition.position, new Vector3(MaxPosition.position.x, MinPosition.position.y, 0));
                 Gizmos.DrawLine(MaxPosition.position, new Vector3(MinPosition.position.x, MaxPosition.position.y, 0));
                 Gizmos.DrawLine(MaxPosition.position, new Vector3(MaxPosition.position.x, MinPosition.position.y, 0));
+            }
+
+            if(bombAttackDestination != null)
+            {
+                Gizmos.color = Color.blue;
+                Gizmos.DrawSphere(bombAttackDestination.position, 0.3f);
             }
         }
         
