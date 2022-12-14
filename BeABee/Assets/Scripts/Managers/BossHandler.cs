@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(SpawnerManager))]
@@ -27,8 +28,6 @@ public class BossHandler : MonoBehaviour, ISubscriber
         _gameManager.onGameStart += () => Initialize();
         _gameManager.onGameOver += () => _spawningBoss = false;
         _gameManager.onGameOver += () => _currentCondition = null;
-
-        bossConditionList.ForEach(x => x.CountToDestroyBoss = x.BossPrefab.CountToDestroy);
     }
 
     private void Initialize()
@@ -112,7 +111,9 @@ public class BossHandler : MonoBehaviour, ISubscriber
         }
 
         _index++;
-        return bossConditionList[_index];
+        var newBossCondition = bossConditionList[_index];
+        newBossCondition.SetBossCountToDestroy();
+        return newBossCondition;
     }
 }
 
@@ -123,11 +124,12 @@ public class BossCondition
     public float Meters;
     public int Score;
     public int MaxFlockHad;
-    public int CountToDestroyBoss;
+    [Range(1,100)] public int CountToDestroyBoss;
 
     public void SetBossCountToDestroy()
     {
-        CountToDestroyBoss = Mathf.Clamp(CountToDestroyBoss, 1, MaxFlockHad);
+        if (CountToDestroyBoss > MaxFlockHad)
+            CountToDestroyBoss = MaxFlockHad;
         BossPrefab.SetCountToDestroy(CountToDestroyBoss);
     }
 }

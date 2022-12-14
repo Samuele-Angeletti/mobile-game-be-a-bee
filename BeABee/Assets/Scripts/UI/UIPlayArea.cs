@@ -36,7 +36,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
         meterValue.text = string.Empty;
         scoreValue.text = string.Empty;
         flockValue.text = string.Empty;
-        currentFlockValue.text = string.Empty;
+        currentFlockValue.text = "x 0";
 
         bombButton.interactable = false;
         bombQuantityValue.text = "x 0";
@@ -66,7 +66,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
             meterValue.text = $"{(int)_gameManager.MetersDone}";
             scoreValue.text = $"{_gameManager.ScoreDone}";
             flockValue.text = $"{_gameManager.FlockMax}";
-            currentFlockValue.text = $"{_gameManager.CurrentFlock}";
+            currentFlockValue.text = $"x {_gameManager.CurrentFlock}";
         }
     }
 

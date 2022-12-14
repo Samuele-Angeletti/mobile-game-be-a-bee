@@ -411,8 +411,9 @@ MonoBehaviour:
   enemyType: 7
   destroyAmount: {fileID: 5491183355227419676}
   LootOnDestroy: {fileID: 2284149537077699134, guid: 8b16f37f7ab2659479eca9a8d10e7abc, type: 3}
+  countToDestroyBoss: 0
   UiIcon: {fileID: 21300000, guid: 2f34800aaae9dec45a260ee98bcd3430, type: 3}
-  BossName: Mantis
+  BossName: Purple Mantis
 --- !u!50 &6172083554367268397
 Rigidbody2D:
   serializedVersion: 4

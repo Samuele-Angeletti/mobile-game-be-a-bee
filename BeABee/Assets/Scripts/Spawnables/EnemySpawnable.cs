@@ -84,7 +84,7 @@ public class EnemySpawnable : Spawnable
                 destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
 
                 if (bee.Attacking)
-                    currentAttachedBees++;
+                    currentAttachedBees += 2;
             }
         }
     }
@@ -101,7 +101,7 @@ public class EnemySpawnable : Spawnable
                 destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
 
                 if (bee.Attacking)
-                    currentAttachedBees--;
+                    currentAttachedBees -= 2;
             }
         }
     }
