@@ -44,6 +44,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
     Queue<Bee> _beeQueue;
     Coroutine _invulnerableCoroutine;
     UIPlayArea _uiPlayArea;
+    private Sprite _currentSprite;
     private void Awake()
     {
         _activeBeeList = new List<Bee>();
@@ -68,7 +69,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     public void Initialize()
     {
-        SetNewLeader(SpawnBee(FrontFlockPosition.position, true, mountainSprite));
+        SetNewLeader(SpawnBee(FrontFlockPosition.position, true, _currentSprite));
     }
 
     private Bee SpawnBee(Vector3 position, bool isLeader, Sprite sprite)
@@ -101,7 +102,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     public void SpawnRandomBee()
     {
-        SpawnBee(transform.position + GetRandomXPosition(), false, mountainSprite);
+        SpawnBee(transform.position + GetRandomXPosition(), false, _currentSprite);
     }
 
     private void Update()
@@ -216,6 +217,28 @@ public class FlockManager : MonoBehaviour, ISubscriber
         {
             _leaderBee.ActiveWarning(true);
             StartCoroutine(WarningMessageCoroutine());
+        }
+    }
+
+    public void UpdateSprite(EScenario scenario)
+    {
+        switch (scenario)
+        {
+            case EScenario.Space:
+                _currentSprite = spaceSprite;
+                break;
+            case EScenario.Sky:
+                _currentSprite = skySprite;
+                break;
+            case EScenario.Mountain:
+                _currentSprite = mountainSprite;
+                break;
+            case EScenario.Forest:
+                _currentSprite = forestSprite;
+                break;
+            case EScenario.Underground:
+                _currentSprite = undergroundSprite;
+                break;
         }
     }
 

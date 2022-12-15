@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour, ISubscriber
     [HideInInspector] public int ScoreDone = 0;
     [HideInInspector] public int FlockMax = 0;
     [HideInInspector] public int CurrentFlock = 0;
+    [HideInInspector] public EScenario CurrentScenario;
 
     public delegate void OnGameStateChange();
     public OnGameStateChange onGameOver;
@@ -59,6 +60,10 @@ public class GameManager : MonoBehaviour, ISubscriber
 
         _uiManager = FindObjectOfType<UIManager>();
         _flockManager = FindObjectOfType<FlockManager>();
+
+        CurrentScenario = EScenario.Forest;
+
+        _flockManager.UpdateSprite(CurrentScenario);
     }
     private void Start()
     {
