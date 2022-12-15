@@ -83,8 +83,8 @@ public class EnemySpawnable : Spawnable
                 currentAttachedBees++;
                 destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
 
-                if (bee.Attacking)
-                    currentAttachedBees += 2;
+                currentAttachedBees = bee.Attacking ? currentAttachedBees + bee.BombAttackIntensity : currentAttachedBees + 1;
+
             }
         }
     }
@@ -97,11 +97,9 @@ public class EnemySpawnable : Spawnable
             if (attachedBees.Contains(bee))
             {
                 attachedBees.Remove(bee);
-                currentAttachedBees--;
                 destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
 
-                if (bee.Attacking)
-                    currentAttachedBees -= 2;
+                currentAttachedBees = bee.Attacking ? currentAttachedBees - bee.BombAttackIntensity : currentAttachedBees - 1;
             }
         }
     }

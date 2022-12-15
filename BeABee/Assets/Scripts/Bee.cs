@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,7 +20,9 @@ public class Bee : MonoBehaviour
     [SerializeField] SpriteRenderer invulnerableGraphics;
     [SerializeField] float speedChangeColor;
     [SerializeField] float bombAttackSpeed;
-    
+    [SerializeField] int bombAttackIntensity = 3;
+    [SerializeField] float bornInvulnerabilityTime = 1.5f;
+
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
     private Vector3 _destinationFlap;
@@ -41,12 +44,16 @@ public class Bee : MonoBehaviour
     private bool _attacking = false;
     public bool IsLeader { get; set; }
     public bool Attacking => _attacking;
+    public int BombAttackIntensity => bombAttackIntensity;
     public bool CanMove => _canMove;
     public bool IsInvulnerable => _isInvulnerable;
     public delegate void OnKilled();
     public OnKilled onKilled;
     private int _originalLayer;
     private Vector3 _bombAttackXDestination;
+
+    private Coroutine _bornInvulnerabilityCoroutine;
+    bool _boolJustBorn;
     private void Awake()
     {
         _rigidbody2D = gameObject.SearchComponent<Rigidbody2D>();
@@ -71,6 +78,25 @@ public class Bee : MonoBehaviour
         _isInvulnerable = false;
         _invulnerableTimer = 0;
         _bombAttackXDestination = bombAttackDestination;
+
+        if (_bornInvulnerabilityCoroutine == null)
+            _bornInvulnerabilityCoroutine = StartCoroutine(BornInvulnerability());
+        else
+        {
+            StopCoroutine(_bornInvulnerabilityCoroutine);
+            _bornInvulnerabilityCoroutine = StartCoroutine(BornInvulnerability());
+        }    
+    }
+
+    private IEnumerator BornInvulnerability()
+    {
+        
+        SetInvulnerable(true, 9);
+        _boolJustBorn = true;
+        yield return new WaitForSeconds(bornInvulnerabilityTime);
+        _boolJustBorn = false;
+        SetInvulnerable(false, _originalLayer);
+        _bornInvulnerabilityCoroutine = null;
     }
 
     public void ChangeSprite(Sprite initialSprite)
@@ -307,6 +333,12 @@ public class Bee : MonoBehaviour
 
     public void SetInvulnerable(bool invulnerable, int invulnerableLayer)
     {
+        if(_boolJustBorn)
+        {
+            StopCoroutine(_bornInvulnerabilityCoroutine);
+            _bornInvulnerabilityCoroutine = null;
+        }
+
         if (invulnerable)
         {
             gameObject.layer = invulnerableLayer;
