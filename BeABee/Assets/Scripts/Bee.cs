@@ -333,10 +333,11 @@ public class Bee : MonoBehaviour
 
     public void SetInvulnerable(bool invulnerable, int invulnerableLayer)
     {
-        if(_boolJustBorn)
+        if(_boolJustBorn && _bornInvulnerabilityCoroutine != null)
         {
             StopCoroutine(_bornInvulnerabilityCoroutine);
             _bornInvulnerabilityCoroutine = null;
+            _boolJustBorn = false;
         }
 
         if (invulnerable)

@@ -41,7 +41,7 @@ public class EnemySpawnable : Spawnable
                 break;
         }
 
-        destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
+        UpdateUI();
     }
 
     public override void UpdateSpawnable()
@@ -80,10 +80,9 @@ public class EnemySpawnable : Spawnable
             if (!attachedBees.Contains(bee))
             {
                 attachedBees.Add(bee);
-                currentAttachedBees++;
-                destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
 
                 currentAttachedBees = bee.Attacking ? currentAttachedBees + bee.BombAttackIntensity : currentAttachedBees + 1;
+                UpdateUI();
 
             }
         }
@@ -97,9 +96,9 @@ public class EnemySpawnable : Spawnable
             if (attachedBees.Contains(bee))
             {
                 attachedBees.Remove(bee);
-                destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
 
                 currentAttachedBees = bee.Attacking ? currentAttachedBees - bee.BombAttackIntensity : currentAttachedBees - 1;
+                UpdateUI();
             }
         }
     }
@@ -107,7 +106,13 @@ public class EnemySpawnable : Spawnable
     public virtual void SetCountToDestroy(int amount)
     {
         countToDestroy = amount;
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
         destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
+
     }
 }
 
