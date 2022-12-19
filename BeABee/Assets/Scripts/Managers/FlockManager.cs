@@ -102,7 +102,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     public void SpawnRandomBee()
     {
-        SpawnBee(transform.position + GetRandomXPosition(), false, _currentSprite);
+        SpawnBee(new Vector3(GetRandomXPosition().x, transform.position.y, 0), false, _currentSprite);
     }
 
     private void Update()
@@ -128,6 +128,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
     {
         return new Vector3(Random.Range(MinPosition.position.x, MaxPosition.position.x), 0, 0);
     }
+
 
     public void Jump()
     {

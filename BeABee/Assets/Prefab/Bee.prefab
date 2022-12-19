@@ -395,6 +395,7 @@ MonoBehaviour:
   invulnerableGraphics: {fileID: 8100675799700783304}
   speedChangeColor: 0.5
   bombAttackSpeed: 300
+  bombAttackIntensity: 3
 --- !u!50 &2428097066123797531
 Rigidbody2D:
   serializedVersion: 4
