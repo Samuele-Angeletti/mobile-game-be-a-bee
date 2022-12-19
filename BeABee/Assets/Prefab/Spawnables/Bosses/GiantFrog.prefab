@@ -406,16 +406,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnableType: 3
   horizontalSpeed: 30
+  ParticleSystemPrefab: {fileID: 4224423364290377456, guid: 70f650bbcfbd9554f8100da18ec9a880, type: 3}
+  DeadBodyySprite: {fileID: 0}
+  DeadBodyprefab: {fileID: 0}
+  HoneyGainedPrefab: {fileID: 7728531668430641502, guid: 25a7e46a6a620e24d985923bf7b2ff50, type: 3}
+  HoneyOnDestroy: 100
   ObstacleType: 0
   EnemyType: 0
   PickableType: 0
   enemyType: 7
   destroyAmount: {fileID: 2956851484251878511}
-  honeyOnDestroy: 100
-  particleSystemPrefab: {fileID: 0}
-  deadEnemySprite: {fileID: 0}
-  deadBodyprefab: {fileID: 0}
-  honeyGainedPrefab: {fileID: 7728531668430641502, guid: 25a7e46a6a620e24d985923bf7b2ff50, type: 3}
   LootOnDestroy: {fileID: 2284149537077699134, guid: 8b16f37f7ab2659479eca9a8d10e7abc, type: 3}
   countToDestroyBoss: 1
   UiIcon: {fileID: 21300000, guid: 36beaffdf9e97754f85d1ddf47c82519, type: 3}

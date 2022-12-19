@@ -19,6 +19,7 @@ public class PickableSpawnable : Spawnable
         if(bee != null)
         {
             bee.AddPickable(pickableType);
+            SpawnVFX();
             Kill();
         }
     }

@@ -186,16 +186,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnableType: 1
   horizontalSpeed: 50
+  ParticleSystemPrefab: {fileID: 4224423364290377456, guid: 70f650bbcfbd9554f8100da18ec9a880, type: 3}
+  DeadBodyySprite: {fileID: -1793498529, guid: 313dacb299f1fcf4c89ce2576c99436d, type: 3}
+  DeadBodyprefab: {fileID: 7208944955261357924, guid: 4656c1e38cc35b046914477617bbbe48, type: 3}
+  HoneyGainedPrefab: {fileID: 7728531668430641502, guid: 25a7e46a6a620e24d985923bf7b2ff50, type: 3}
+  HoneyOnDestroy: 40
   ObstacleType: 0
   EnemyType: 0
   PickableType: 0
   enemyType: 5
   destroyAmount: {fileID: 2031319286299340646}
-  honeyOnDestroy: 50
-  particleSystemPrefab: {fileID: 0}
-  deadEnemySprite: {fileID: -1793498529, guid: 313dacb299f1fcf4c89ce2576c99436d, type: 3}
-  deadBodyprefab: {fileID: 7208944955261357924, guid: 4656c1e38cc35b046914477617bbbe48, type: 3}
-  honeyGainedPrefab: {fileID: 7728531668430641502, guid: 25a7e46a6a620e24d985923bf7b2ff50, type: 3}
 --- !u!50 &406323702906289495
 Rigidbody2D:
   serializedVersion: 4

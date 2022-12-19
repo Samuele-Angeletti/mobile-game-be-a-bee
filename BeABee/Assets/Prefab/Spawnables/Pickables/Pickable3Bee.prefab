@@ -303,6 +303,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnableType: 0
   horizontalSpeed: 50
+  ParticleSystemPrefab: {fileID: 4224423364290377456, guid: 70f650bbcfbd9554f8100da18ec9a880, type: 3}
+  DeadBodyySprite: {fileID: 0}
+  DeadBodyprefab: {fileID: 0}
+  HoneyGainedPrefab: {fileID: 0}
   ObstacleType: 0
   EnemyType: 0
   PickableType: 0
