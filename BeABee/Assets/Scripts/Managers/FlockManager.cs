@@ -23,8 +23,12 @@ public class FlockManager : MonoBehaviour, ISubscriber
     [SerializeField] int minBeesRequiredForBombAttack;
     [SerializeField, Range(1, 100)] int percentageUseBeeForBombAttack;
     [SerializeField] Transform bombAttackDestination;
+    [SerializeField] int bombAttackIntensity = 3;
+    [SerializeField] float bombAttackSpeed = 300;
     [Space(10)]
     [SerializeField] float timeDisplayWarning;
+    [Space(10)]
+    [SerializeField] float bornInvulnerabilityTime = 1.5f;
     private int _bombQuantity;
     public int BombQuantity
     {
@@ -85,10 +89,9 @@ public class FlockManager : MonoBehaviour, ISubscriber
         {
             newBee.onKilled += () => _beeQueue.Enqueue(newBee);
             newBee.onKilled += () => _activeBeeList.Remove(newBee);
-            newBee.onKilled += () => EnableBombButtonCheck();
         }
 
-        newBee.Initialize(isLeader, sprite, this, bombAttackDestination.position);
+        newBee.Initialize(isLeader, sprite, this, bombAttackDestination.position, bornInvulnerabilityTime);
         _activeBeeList.Add(newBee);
         if(_leaderBee != null)
             _activeBeeList.ForEach(x => x.SetFlockLeader(_leaderBee));
@@ -112,17 +115,10 @@ public class FlockManager : MonoBehaviour, ISubscriber
         else
             transform.position = Vector3.zero;
 
-        if(BombQuantity > 0 && BombAttackRequiredBees.Count >= minBeesRequiredForBombAttack)
-        {
-            _uiPlayArea.EnableBombButton(true);
-        }
+        _uiPlayArea.EnableBombButton(BombQuantity > 0 && BombAttackRequiredBees.Count >= minBeesRequiredForBombAttack);
+        
     }
 
-    private void EnableBombButtonCheck()
-    {
-        if (BombAttackRequiredBees.Count < minBeesRequiredForBombAttack)
-            _uiPlayArea.EnableBombButton(false);
-    }
 
     private Vector3 GetRandomXPosition()
     {
@@ -200,7 +196,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
                     selectedBees.Add(randomBee);
                 }
             }
-            selectedBees.ForEach(x => x.BombAttack());
+            selectedBees.ForEach(x => x.BombAttack(bombAttackIntensity, bombAttackSpeed));
         }
     }
 

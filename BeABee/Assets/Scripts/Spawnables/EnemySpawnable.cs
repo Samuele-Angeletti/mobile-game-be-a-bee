@@ -69,7 +69,6 @@ public class EnemySpawnable : Spawnable
 
         attachedBees.Clear();
 
-
         base.Kill();
     }
 
@@ -81,6 +80,7 @@ public class EnemySpawnable : Spawnable
             if (EnemyType != EEnemyType.Boss && bee.IsInvulnerable)
             {
                 Publisher.Publish(new EnemyKilledMessage(enemyType, this));
+                SpawnVFX();
                 Kill();
             }
 

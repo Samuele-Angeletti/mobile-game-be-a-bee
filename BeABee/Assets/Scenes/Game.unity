@@ -654,11 +654,11 @@ PrefabInstance:
     - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
       propertyPath: bossConditionList.Array.data[1].BossPrefab
       value: 
-      objectReference: {fileID: 3477185393002570394, guid: b61a00c8216746048a948262305901d3, type: 3}
+      objectReference: {fileID: 3477185393002570394, guid: 37ef15f05ee256f49975a43234431ef1, type: 3}
     - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
       propertyPath: bossConditionList.Array.data[2].BossPrefab
       value: 
-      objectReference: {fileID: 3477185393002570394, guid: f9784d6b718320c4982b315ea578371a, type: 3}
+      objectReference: {fileID: 3477185393002570394, guid: f7c17002825a8d946ab878799d89453a, type: 3}
     - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
       propertyPath: bossConditionList.Array.data[3].BossPrefab
       value: 
@@ -666,11 +666,11 @@ PrefabInstance:
     - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
       propertyPath: bossConditionList.Array.data[4].BossPrefab
       value: 
-      objectReference: {fileID: 3477185393002570394, guid: b61a00c8216746048a948262305901d3, type: 3}
+      objectReference: {fileID: 3477185393002570394, guid: 37ef15f05ee256f49975a43234431ef1, type: 3}
     - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
       propertyPath: bossConditionList.Array.data[5].BossPrefab
       value: 
-      objectReference: {fileID: 3477185393002570394, guid: f9784d6b718320c4982b315ea578371a, type: 3}
+      objectReference: {fileID: 3477185393002570394, guid: f7c17002825a8d946ab878799d89453a, type: 3}
     - target: {fileID: 4593849631312725001, guid: 5e9f3a709508d9b4fba834302bbd8248, type: 3}
       propertyPath: bossConditionList.Array.data[0].MaxFlockHad
       value: 5
@@ -781,6 +781,22 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 743415281}
+    - target: {fileID: 633593806379087170, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 633593806379087170, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 633593806379087170, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 633593806379087170, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 1556737551451615888, guid: fc5b5a0607536c647b287bd762e875b5, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

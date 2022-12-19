@@ -1,3 +1,4 @@
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
     [Header("Pause Panel")]
     [SerializeField] GameObject pausePanel;
     GameManager _gameManager;
+    BossCondition _currentCondition;
     private void Start()
     {
         _gameManager = GameManager.Instance;
@@ -56,7 +58,8 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
 
     public void EnableBombButton(bool enabled)
     {
-        bombButton.interactable = enabled;
+        if(bombButton.interactable != enabled) 
+            bombButton.interactable = enabled;
     }
 
     private void Update()
@@ -67,6 +70,9 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
             scoreValue.text = $"{_gameManager.ScoreDone}";
             flockValue.text = $"{_gameManager.FlockMax}";
             currentFlockValue.text = $"x {_gameManager.CurrentFlock}";
+
+            if(_currentCondition != null)
+                ColorConditionValues(_currentCondition);
         }
     }
 
@@ -82,7 +88,16 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
             meterConditionValue.text = $"{(int)condition.Meters}";
             scoreConditionValue.text = $"{condition.Score}";
             flockConditionValue.text = $"{condition.MaxFlockHad}";
+            _currentCondition = condition;
+            ColorConditionValues(condition);
         }
+    }
+
+    private void ColorConditionValues(BossCondition condition)
+    {
+        meterConditionValue.color = condition.Meters > _gameManager.MetersDone ? Color.red : Color.white;
+        scoreConditionValue.color = condition.Score > _gameManager.ScoreDone ? Color.red : Color.white;
+        flockConditionValue.color = condition.MaxFlockHad > _gameManager.FlockMax ? Color.red : Color.white;
     }
 
     private void OnDestroy()
