@@ -12,6 +12,8 @@ public class BossSpawnable : EnemySpawnable
         SetCountToDestroy(countToDestroyBoss);
         base.Initialize(deathPosition);
         onDefeatEnemy += () => Publisher.Publish(new SpawnObjectMessage(LootOnDestroy));
+        onDefeatEnemy += () => Publisher.Publish(new ChoosingNextScenarioMessage());
+        
     }
 
     public override void SetCountToDestroy(int amount)

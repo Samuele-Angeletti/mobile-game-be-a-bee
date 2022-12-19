@@ -19,4 +19,6 @@ public class UIManager : MonoBehaviour
         PlayArea.SetActive(false);
         _uiPlayArea.ResetValues();
     }
+
+
 }

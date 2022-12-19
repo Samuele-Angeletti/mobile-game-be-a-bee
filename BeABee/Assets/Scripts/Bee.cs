@@ -40,10 +40,12 @@ public class Bee : MonoBehaviour
     private bool _greenToRed = false;
     private bool _redToBlue = false;
     private bool _attacking = false;
+    public bool Locked { get; private set; }
     public bool IsLeader { get; set; }
     public bool Attacking => _attacking;
     public int BombAttackIntensity { get; private set; }
     public bool CanMove => _canMove;
+   
     public bool IsInvulnerable => _isInvulnerable;
     public delegate void OnKilled();
     public OnKilled onKilled;
@@ -75,6 +77,10 @@ public class Bee : MonoBehaviour
         _blueToGreen = true;
         _isInvulnerable = false;
         _invulnerableTimer = 0;
+
+        if(!isLeader)
+            Locked = flockManager.LeaderBee.Locked;
+
         _bombAttackXDestination = bombAttackDestination;
 
         if (_bornInvulnerabilityCoroutine == null)
@@ -127,6 +133,8 @@ public class Bee : MonoBehaviour
 
     private void Update()
     {
+        if (Locked) return;
+
         if (_canMove && IsLeader)
         {
             if (_jumping)
@@ -189,12 +197,16 @@ public class Bee : MonoBehaviour
 
     public void Jump()
     {
-        if(_canMove)
+        if (Locked) return;
+
+        if (_canMove)
             _jumping = true;
     }
 
     void FixedUpdate()
     {
+        if (Locked) return;
+
         if (_canMove && !_attacking)
         {
             if (IsLeader)
@@ -413,4 +425,10 @@ public class Bee : MonoBehaviour
         warningImage.gameObject.SetActive(active);
     }
 
+    public void Lock(bool locked)
+    {
+        Locked = locked;
+        _verticalMove = 0;
+        _rigidbody2D.velocity = Vector2.zero;
+    }
 }

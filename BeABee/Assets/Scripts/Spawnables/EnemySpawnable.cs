@@ -121,6 +121,8 @@ public class EnemySpawnable : Spawnable
         destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
 
     }
+
+    public int GetCountToDestroy() => countToDestroy;
 }
 
 public enum EEnemyType

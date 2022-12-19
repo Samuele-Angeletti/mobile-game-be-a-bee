@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour, ISubscriber
     private void Start()
     {
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
+        Publisher.Subscribe(this, typeof(ChoosingNextScenarioMessage));
+        Publisher.Subscribe(this, typeof(ScenarioChoosedMessage));
     }
     private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
@@ -130,8 +132,21 @@ public class GameManager : MonoBehaviour, ISubscriber
                     break;
             }
         }
+        else if(message is ChoosingNextScenarioMessage)
+        {
+            IsGamePlaying = false;
+        }
+        else if (message is ScenarioChoosedMessage)
+        {
+            IsGamePlaying = true;
+        }
     }
-
+    private void OnDestroy()
+    {
+        Publisher.Unsubscribe(this, typeof(EnemyKilledMessage));
+        Publisher.Unsubscribe(this, typeof(ChoosingNextScenarioMessage));
+        Publisher.Unsubscribe(this, typeof(ScenarioChoosedMessage));
+    }
     public void ExitGame()
     {
         Application.Quit();

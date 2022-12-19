@@ -18,6 +18,8 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
     [SerializeField, Range(1, 100)] float chanceSpawnObstacle;
     [SerializeField, Range(1, 100)] float chanceSpawnEnemy;
 
+    float _currentEasyToRandomicStep;
+    float _singleDifficultStep;
     float _timePassed;
     float _chanceSpawnRange => chanceSpawnEnemy + chanceSpawnPickable + chanceSpawnObstacle;
     bool _spawningBoss;
@@ -25,13 +27,17 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
     private void Awake()
     {
         _onGameSpawnableList = new List<Spawnable>();
-
     }
 
     private void Start()
     {
         GameManager.Instance.onGameOver += () => _onGameSpawnableList.Where(x => x.gameObject.activeSelf).ToList().ForEach(x => x.Kill());
         GameManager.Instance.onGameOver += () => _spawningBoss = false;
+        GameManager.Instance.onGameOver += () => _currentEasyToRandomicStep = _singleDifficultStep - 1;
+
+        _singleDifficultStep = 100 / spawnablePrefabList.Where(x => x.SpawnableType == ESpawnableTypes.Enemy).Select(x => (EnemySpawnable)x).OrderBy(x => x.GetCountToDestroy()).ToList().Count;
+        IncreaseEnemySpawnDifficult();
+        _currentEasyToRandomicStep -= 1;
 
         Publisher.Subscribe(this, typeof(SpawnObjectMessage));
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
@@ -58,9 +64,9 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
         if (spawnable == null)
         {
             var spawnableType = GetSpawnType();
-            var selectedSpawnableList = spawnablePrefabList.Where(x => x.SpawnableType == spawnableType).ToList();
+            var selectedSpawnableTypeList = spawnablePrefabList.Where(x => x.SpawnableType == spawnableType).ToList();
 
-            selectedSpawnablePrefab = selectedSpawnableList[UnityEngine.Random.Range(0, selectedSpawnableList.Count)];
+            selectedSpawnablePrefab = spawnableType == ESpawnableTypes.Enemy ? GetRandomEnemy(selectedSpawnableTypeList) : selectedSpawnableTypeList[UnityEngine.Random.Range(0, selectedSpawnableTypeList.Count)];
         }
         else
             selectedSpawnablePrefab = spawnable;
@@ -110,6 +116,21 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
         _onGameSpawnableList.Add(newSpawnable);
     }
 
+    private Spawnable GetRandomEnemy(List<Spawnable> selectedSpawnableTypeList)
+    {
+        var enemyPrefabList = selectedSpawnableTypeList.Select(x => (EnemySpawnable)x).OrderBy(x => x.GetCountToDestroy()).ToList();
+
+        for (int i = 0; i < enemyPrefabList.Count; i++)
+        {
+            if(_currentEasyToRandomicStep <= _singleDifficultStep * i)
+            {
+                return i == 0 ? enemyPrefabList[0] : enemyPrefabList[UnityEngine.Random.Range(0, i)];
+            }
+        }
+
+        return enemyPrefabList.Last();
+    }
+
     private void PoolSpawnable(Spawnable selectedSpawnable, Vector3 spawnPos)
     {
         selectedSpawnable.gameObject.SetActive(true);
@@ -137,6 +158,26 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
         return ESpawnableTypes.Obstacle;
     }
 
+    public void IncreaseEnemySpawnDifficult()
+    {
+        if (_currentEasyToRandomicStep >= 100)
+            return;
+
+        _currentEasyToRandomicStep += _singleDifficultStep;
+        if (_currentEasyToRandomicStep >= 100)
+            _currentEasyToRandomicStep = 100;
+    }
+
+    public void DecreaseEnemySpawnDifficult()
+    {
+        if (_currentEasyToRandomicStep <= _singleDifficultStep)
+            return;
+
+        _currentEasyToRandomicStep -= _singleDifficultStep;
+        if (_currentEasyToRandomicStep < 0)
+            _currentEasyToRandomicStep = 1;
+    }
+
     public void OnPublish(IMessage message)
     {
         if (message is SpawnObjectMessage spawnMessage)
@@ -148,6 +189,8 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
             if(enemyKilledMessage.EnemyType == EEnemyType.Boss)
             {
                 _spawningBoss = false;
+
+                IncreaseEnemySpawnDifficult();
             }
         }
     }
