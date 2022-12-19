@@ -122,28 +122,10 @@ public class GameManager : MonoBehaviour, ISubscriber
     {
         if(message is EnemyKilledMessage enemyKilledMsg)
         {
+            ScoreDone += enemyKilledMsg.EnemySpawnable.HoneyOnDestroy;
             switch (enemyKilledMsg.EnemyType)
             {
-                case EEnemyType.TwoBees:
-                    ScoreDone += 10;
-                    break;
-                case EEnemyType.ThreeBees:
-                    ScoreDone += 20;
-                    break;
-                case EEnemyType.FourBees:
-                    ScoreDone += 30;
-                    break;
-                case EEnemyType.FiveBees:
-                    ScoreDone += 40;
-                    break;
-                case EEnemyType.SixBees:
-                    ScoreDone += 50;
-                    break;
-                case EEnemyType.SevenBees:
-                    ScoreDone += 60;
-                    break;
                 case EEnemyType.Boss:
-                    ScoreDone += 100;
                     IncreaseGameSpeed();
                     break;
             }

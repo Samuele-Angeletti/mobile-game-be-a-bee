@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,10 +7,18 @@ public class EnemySpawnable : Spawnable
 {
     [SerializeField] EEnemyType enemyType;
     [SerializeField] TextMeshProUGUI destroyAmount;
+    [SerializeField] int honeyOnDestroy;
+    [Header("On Destroy Spawn Effects")]
+    [SerializeField] ParticleSystem particleSystemPrefab;
+    [SerializeField] Sprite deadEnemySprite;
+    [SerializeField] GameObject deadBodyprefab;
+    [SerializeField] GameObject honeyGainedPrefab;
 
     int countToDestroy;
     int currentAttachedBees;
     List<Bee> attachedBees;
+
+    public int HoneyOnDestroy => honeyOnDestroy;
 
     public delegate void OnDefeatEnemy();
     public OnDefeatEnemy onDefeatEnemy;
@@ -50,7 +59,7 @@ public class EnemySpawnable : Spawnable
 
         if (currentAttachedBees >= countToDestroy)
         {
-            Publisher.Publish(new EnemyKilledMessage(enemyType));
+            Publisher.Publish(new EnemyKilledMessage(enemyType, this));
 
             onDefeatEnemy?.Invoke();
 
@@ -64,7 +73,33 @@ public class EnemySpawnable : Spawnable
 
         attachedBees.Clear();
 
+        SpawnVFX();
+
         base.Kill();
+    }
+
+    private void SpawnVFX()
+    {
+        if(particleSystemPrefab != null)
+        {
+            ParticleSystem particleSystem = Instantiate(particleSystemPrefab, transform.position, Quaternion.identity);
+            Destroy(particleSystem.gameObject, 2f);
+        }
+
+        if(deadBodyprefab != null)
+        {
+            GameObject deadEnemy = Instantiate(deadBodyprefab, transform.position, Quaternion.identity);
+            deadEnemy.GetComponent<Rigidbody2D>().AddForce(new Vector2(-1, 1) * 5, ForceMode2D.Impulse);
+            deadEnemy.GetComponent<SpriteRenderer>().sprite = deadEnemySprite;
+            Destroy(deadEnemy, 2f);
+        }
+
+        if(honeyGainedPrefab != null)
+        {
+            GameObject honeyGained = Instantiate(honeyGainedPrefab, transform.position, Quaternion.identity);
+            honeyGained.GetComponentInChildren<TextMeshProUGUI>().text = honeyOnDestroy.ToString();
+            Destroy(honeyGained, 2f);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -73,7 +108,7 @@ public class EnemySpawnable : Spawnable
         {
             if (EnemyType != EEnemyType.Boss && bee.IsInvulnerable)
             {
-                Publisher.Publish(new EnemyKilledMessage(enemyType));
+                Publisher.Publish(new EnemyKilledMessage(enemyType, this));
                 Kill();
             }
 

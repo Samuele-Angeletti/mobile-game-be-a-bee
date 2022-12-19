@@ -6,9 +6,11 @@ using UnityEngine;
 public class EnemyKilledMessage : IMessage
 {
     public EEnemyType EnemyType;
+    public EnemySpawnable EnemySpawnable;
 
-	public EnemyKilledMessage(EEnemyType enemyType)
+    public EnemyKilledMessage(EEnemyType enemyType, EnemySpawnable enemySpawnable)
 	{
 		EnemyType = enemyType;
+        EnemySpawnable = enemySpawnable;
 	}
 }
