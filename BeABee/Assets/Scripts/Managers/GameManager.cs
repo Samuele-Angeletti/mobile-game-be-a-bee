@@ -134,10 +134,13 @@ public class GameManager : MonoBehaviour, ISubscriber
         }
         else if(message is ChoosingNextScenarioMessage)
         {
+            _lastTimeScale = Time.timeScale;
+            Time.timeScale = 1;
             IsGamePlaying = false;
         }
         else if (message is ScenarioChoosedMessage)
         {
+            Time.timeScale = _lastTimeScale;
             IsGamePlaying = true;
         }
     }

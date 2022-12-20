@@ -35,7 +35,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
     [SerializeField] Button upDirectionButton;
     [SerializeField] Button middleDirectionButton;
     [SerializeField] Button lowDirectionButton;
-    [SerializeField] TextMeshProUGUI timerText;
+    [SerializeField] Slider timerTextSlider;
     [SerializeField] float timer;
 
     private float timePassed;
@@ -128,10 +128,11 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
     private IEnumerator DisplayButtonsCoroutine()
     {
         timePassed = timer;
+        timerTextSlider.value = 1;
         while (true)
         {
+            timerTextSlider.value = timePassed / timer;
             timePassed -= Time.deltaTime;
-            timerText.text = $"{(int)timePassed}";
             if(timePassed <= 0)
             {
                 middleDirectionButton.GetComponent<UIButtonAction>().ScenarioSelected();
