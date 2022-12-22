@@ -39,6 +39,10 @@ public class GameManager : MonoBehaviour, ISubscriber
     [HideInInspector] public int ScoreDone = 0;
     [HideInInspector] public int FlockMax = 0;
     [HideInInspector] public int CurrentFlock = 0;
+    [HideInInspector] public int BossesKilled = 0;
+    [HideInInspector] public int EnemiesKilled = 0;
+    [HideInInspector] public int BombUsed = 0;
+    [HideInInspector] public int InvulnerabilityPicked = 0;
     [HideInInspector] public EScenario CurrentScenario;
 
     public delegate void OnGameStateChange();
@@ -87,6 +91,8 @@ public class GameManager : MonoBehaviour, ISubscriber
     {
         IsGamePlaying = false;
 
+        PlayerStatistics.SetStatistics(new Statistics((int)MetersDone, ScoreDone, FlockMax, BossesKilled, EnemiesKilled, BombUsed, InvulnerabilityPicked));
+
         onGameOver?.Invoke();
 
         Time.timeScale = 1;
@@ -95,7 +101,7 @@ public class GameManager : MonoBehaviour, ISubscriber
         ScoreDone = 0;
         CurrentFlock = 0;
 
-        _uiManager.ResetMenu();
+        _uiManager.ShowFinalStats();
     }
 
     private void Update()
@@ -128,7 +134,11 @@ public class GameManager : MonoBehaviour, ISubscriber
             switch (enemyKilledMsg.EnemyType)
             {
                 case EEnemyType.Boss:
+                    BossesKilled++;
                     IncreaseGameSpeed();
+                    break;
+                default:
+                    EnemiesKilled++;
                     break;
             }
         }

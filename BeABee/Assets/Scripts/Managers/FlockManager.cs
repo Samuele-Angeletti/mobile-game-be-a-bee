@@ -168,6 +168,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     private IEnumerator InvulnerableCoroutine()
     {
+        GameManager.Instance.InvulnerabilityPicked++;
         _activeBeeList.ForEach(x => x.SetInvulnerable(true, invulnerableLayer));
         int i = invulnerableTime;
         while(i > 0)
@@ -188,6 +189,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
         if(BombQuantity > 0 && BombAttackRequiredBees.Count >= minBeesRequiredForBombAttack)
         {
             BombQuantity--;
+            GameManager.Instance.BombUsed++;
             int beeToUse = BombAttackRequiredBees.Count * percentageUseBeeForBombAttack / 100;
             List<Bee> selectedBees = new List<Bee>();
             while (selectedBees.Count < beeToUse)

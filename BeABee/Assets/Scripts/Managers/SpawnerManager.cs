@@ -128,7 +128,7 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
             }
         }
 
-        return enemyPrefabList.Last();
+        return enemyPrefabList[UnityEngine.Random.Range(0, enemyPrefabList.Count)];
     }
 
     private void PoolSpawnable(Spawnable selectedSpawnable, Vector3 spawnPos)
