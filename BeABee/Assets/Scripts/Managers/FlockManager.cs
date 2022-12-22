@@ -44,7 +44,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     List<Bee> _activeBeeList;
     List<Bee> BombAttackRequiredBees => _activeBeeList.Where(x => !x.IsLeader && x.CanMove).ToList();
-    Bee _leaderBee;
+    public Bee LeaderBee { get; private set; }
     Queue<Bee> _beeQueue;
     Coroutine _invulnerableCoroutine;
     UIPlayArea _uiPlayArea;
@@ -69,6 +69,8 @@ public class FlockManager : MonoBehaviour, ISubscriber
             minBeesRequiredForBombAttack = 2;
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
         Publisher.Subscribe(this, typeof(BossConditionMetMessage));
+        Publisher.Subscribe(this, typeof(ChoosingNextScenarioMessage));
+        Publisher.Subscribe(this, typeof(ScenarioChoosedMessage));
     }
 
     public void Initialize()
@@ -93,8 +95,8 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
         newBee.Initialize(isLeader, sprite, this, bombAttackDestination.position, bornInvulnerabilityTime);
         _activeBeeList.Add(newBee);
-        if(_leaderBee != null)
-            _activeBeeList.ForEach(x => x.SetFlockLeader(_leaderBee));
+        if(LeaderBee != null)
+            _activeBeeList.ForEach(x => x.SetFlockLeader(LeaderBee));
         if (!newBee.IsLeader)
             newBee.SetXDestination(newBee.transform.position);
 
@@ -110,8 +112,8 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     private void Update()
     {
-        if (_leaderBee != null)
-            transform.position = _leaderBee.transform.position;
+        if (LeaderBee != null)
+            transform.position = LeaderBee.transform.position;
         else
             transform.position = Vector3.zero;
 
@@ -137,20 +139,20 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     public void SetNewLeader(Bee bee = null)
     {
-        _leaderBee = bee != null 
+        LeaderBee = bee != null 
             ? bee 
             : _activeBeeList.Count > 0 
             ? _activeBeeList.First()
             : null;
 
-        if(_leaderBee == null)
+        if(LeaderBee == null)
         {
             GameManager.Instance.GameOver();
             return;
         }
 
-        _leaderBee.SetLeader();
-        _activeBeeList.ForEach(x => x.SetFlockLeader(_leaderBee));
+        LeaderBee.SetLeader();
+        _activeBeeList.ForEach(x => x.SetFlockLeader(LeaderBee));
     }
 
     public void SetInvulnerableFlock()
@@ -166,15 +168,16 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     private IEnumerator InvulnerableCoroutine()
     {
+        GameManager.Instance.InvulnerabilityPicked++;
         _activeBeeList.ForEach(x => x.SetInvulnerable(true, invulnerableLayer));
         int i = invulnerableTime;
         while(i > 0)
         {
-            _leaderBee.UpdateInvlunerableText(true, i);
+            LeaderBee.UpdateInvlunerableText(true, i);
             yield return new WaitForSeconds(1);
             i--;
         }
-        _leaderBee.UpdateInvlunerableText(false, 0);
+        LeaderBee.UpdateInvlunerableText(false, 0);
         _activeBeeList.ForEach(x => x.SetInvulnerable(false, -1));
     }
 
@@ -186,6 +189,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
         if(BombQuantity > 0 && BombAttackRequiredBees.Count >= minBeesRequiredForBombAttack)
         {
             BombQuantity--;
+            GameManager.Instance.BombUsed++;
             int beeToUse = BombAttackRequiredBees.Count * percentageUseBeeForBombAttack / 100;
             List<Bee> selectedBees = new List<Bee>();
             while (selectedBees.Count < beeToUse)
@@ -200,11 +204,16 @@ public class FlockManager : MonoBehaviour, ISubscriber
         }
     }
 
+    public void LockFlock(bool locked)
+    {
+        _activeBeeList.ForEach(x => x.Lock(locked));
+    }
+
     public void OnPublish(IMessage message)
     {
         if(message is EnemyKilledMessage)
         {
-            _leaderBee.SetXDestination(FrontFlockPosition.position);
+            LeaderBee.SetXDestination(FrontFlockPosition.position);
             foreach (Bee bee in _activeBeeList.Where(x => !x.IsLeader))
             {
                 bee.SetXDestination(GetRandomXPosition());
@@ -212,8 +221,16 @@ public class FlockManager : MonoBehaviour, ISubscriber
         }
         else if(message is BossConditionMetMessage)
         {
-            _leaderBee.ActiveWarning(true);
+            LeaderBee.ActiveWarning(true);
             StartCoroutine(WarningMessageCoroutine());
+        }
+        else if(message is ChoosingNextScenarioMessage)
+        {
+            LockFlock(true);
+        }
+        else if(message is ScenarioChoosedMessage)
+        {
+            LockFlock(false);
         }
     }
 
@@ -241,7 +258,7 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     private IEnumerator WarningMessageCoroutine()
     {
-        var currentLeader = _leaderBee;
+        var currentLeader = LeaderBee;
         yield return new WaitForSeconds(timeDisplayWarning);
         if(currentLeader.gameObject.activeSelf)
             currentLeader.ActiveWarning(false);
@@ -251,6 +268,8 @@ public class FlockManager : MonoBehaviour, ISubscriber
     {
         Publisher.Unsubscribe(this, typeof(EnemyKilledMessage));
         Publisher.Unsubscribe(this, typeof(BossConditionMetMessage));
+        Publisher.Unsubscribe(this, typeof(ChoosingNextScenarioMessage));
+        Publisher.Unsubscribe(this, typeof(ScenarioChoosedMessage));
 
     }
 

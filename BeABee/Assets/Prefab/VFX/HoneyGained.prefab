@@ -91,7 +91,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_color1: {r: 1, g: 0.80725455, b: 0.25943398, a: 1}
   m_color2: {r: 1, g: 0.45143205, b: 0, a: 1}
-  m_angle: -13
+  m_angle: -180
   m_ignoreRatio: 0
 --- !u!1 &6831630010618734821
 GameObject:
@@ -239,6 +239,7 @@ GameObject:
   - component: {fileID: 2608007452012228310}
   - component: {fileID: 6158249482775968799}
   - component: {fileID: 8324404328426347801}
+  - component: {fileID: 2434417731037657060}
   m_Layer: 5
   m_Name: HoneyGained
   m_TagString: Untagged
@@ -265,7 +266,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -2.53, y: 2.51}
+  m_AnchoredPosition: {x: -2.5300293, y: 2.5100098}
   m_SizeDelta: {x: 2, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6158249482775968799
@@ -311,4 +312,16 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
+--- !u!114 &2434417731037657060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7728531668430641502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 962ce04f6a2f0954089335ade64429de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

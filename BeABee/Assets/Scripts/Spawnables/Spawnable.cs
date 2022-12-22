@@ -81,7 +81,6 @@ public class Spawnable : MonoBehaviour
         {
             GameObject honeyGained = Instantiate(HoneyGainedPrefab, transform.position, Quaternion.identity);
             honeyGained.GetComponentInChildren<TextMeshProUGUI>().text = HoneyOnDestroy.ToString();
-            Destroy(honeyGained, 2f);
         }
     }
 
