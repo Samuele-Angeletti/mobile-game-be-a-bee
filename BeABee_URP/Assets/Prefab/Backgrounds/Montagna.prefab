@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6940104213007009006
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8610705140677558659}
+  - component: {fileID: 6243839922026062749}
+  m_Layer: 0
+  m_Name: Montagna
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8610705140677558659
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6940104213007009006}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6243839922026062749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6940104213007009006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 955d4d1c2876b074db5e58896aaa2ef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneryType: 2
+  followListOrder: 1
+  backgroundElements:
+  - texture: {fileID: 2100000, guid: 8823618aae879834fa47406722a1077f, type: 2}
+    relativeSpeed: 0.6
+    order: 1
+  - texture: {fileID: 2100000, guid: dbe871579cf1bd3449521b8bfc5675dc, type: 2}
+    relativeSpeed: 0.5
+    order: 2
+  - texture: {fileID: 2100000, guid: fc0093a213271c342be80e343bf3917a, type: 2}
+    relativeSpeed: 0.4
+    order: 3
+  - texture: {fileID: 2100000, guid: 2b06c18a474dd874daf15e26fad10184, type: 2}
+    relativeSpeed: 0.3
+    order: 4
+  - texture: {fileID: 2100000, guid: af69dffbca469f549bb44af3406530f9, type: 2}
+    relativeSpeed: 0.2
+    order: 5
+  - texture: {fileID: 2100000, guid: 8fb9add649fb1d54d912ccf8ee9be9ee, type: 2}
+    relativeSpeed: 0.1
+    order: 6
