@@ -42,10 +42,12 @@ public class BackgroundManager : MonoBehaviour
 
     void Start()
     {
-        scrollingIsActive = false;
         ResetMoving();
         activeBackgroundContainer = SpawnBackground(startingScenery, centerSpawnPoint.position);
         CalculateSpawnPoint();
+
+        GameManager.Instance.onGameOver += () => scrollingIsActive = false;
+        GameManager.Instance.onGameStart += () => scrollingIsActive = true;
     }
 
     private void ResetMoving()
