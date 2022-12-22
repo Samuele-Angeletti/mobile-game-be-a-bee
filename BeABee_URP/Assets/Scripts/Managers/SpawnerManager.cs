@@ -18,15 +18,21 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
     [SerializeField, Range(1, 100)] float chanceSpawnObstacle;
     [SerializeField, Range(1, 100)] float chanceSpawnEnemy;
 
+    [Header("Sounds")]
+    [SerializeField] AudioClip normalBackground;
+    [SerializeField] AudioClip bossBackground;
+
     float _currentEasyToRandomicStep;
     float _singleDifficultStep;
     float _timePassed;
     float _chanceSpawnRange => chanceSpawnEnemy + chanceSpawnPickable + chanceSpawnObstacle;
     bool _spawningBoss;
     List<Spawnable> _onGameSpawnableList;
+    AudioSource _audioSource;
     private void Awake()
     {
         _onGameSpawnableList = new List<Spawnable>();
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -34,6 +40,9 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
         GameManager.Instance.onGameOver += () => _onGameSpawnableList.Where(x => x.gameObject.activeSelf).ToList().ForEach(x => x.Kill());
         GameManager.Instance.onGameOver += () => _spawningBoss = false;
         GameManager.Instance.onGameOver += () => _currentEasyToRandomicStep = _singleDifficultStep - 1;
+        GameManager.Instance.onGameStart += () => _audioSource.Play();
+        GameManager.Instance.onGameOver += () => _audioSource.Stop();
+        _audioSource.clip = normalBackground;
 
         _singleDifficultStep = 100 / spawnablePrefabList.Where(x => x.SpawnableType == ESpawnableTypes.Enemy).Select(x => (EnemySpawnable)x).OrderBy(x => x.GetCountToDestroy()).ToList().Count;
         IncreaseEnemySpawnDifficult();
@@ -106,7 +115,9 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
                 break;
             case ESpawnableTypes.Boss:
                 _spawningBoss = true;
-                
+                _audioSource.Stop();
+                _audioSource.clip = bossBackground;
+                _audioSource.Play();
                 break;
         }
 
@@ -189,7 +200,9 @@ public class SpawnerManager : MonoBehaviour, ISubscriber
             if(enemyKilledMessage.EnemyType == EEnemyType.Boss)
             {
                 _spawningBoss = false;
-
+                _audioSource.Stop();
+                _audioSource.clip = normalBackground;
+                _audioSource.Play();
                 IncreaseEnemySpawnDifficult();
             }
         }
