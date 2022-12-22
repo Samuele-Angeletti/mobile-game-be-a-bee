@@ -19,10 +19,8 @@ public class Bee : MonoBehaviour
     [SerializeField] float _slowDownDistance;
     [SerializeField] SpriteRenderer invulnerableGraphics;
     [SerializeField] float speedChangeColor;
-    [SerializeField] float bombAttackSpeed;
-    [SerializeField] int bombAttackIntensity = 3;
-    [SerializeField] float bornInvulnerabilityTime = 1.5f;
 
+    private float _bombAttackSpeed;
     private Rigidbody2D _rigidbody2D;
     private SpriteRenderer _spriteRenderer;
     private Vector3 _destinationFlap;
@@ -42,10 +40,12 @@ public class Bee : MonoBehaviour
     private bool _greenToRed = false;
     private bool _redToBlue = false;
     private bool _attacking = false;
+    public bool Locked { get; private set; }
     public bool IsLeader { get; set; }
     public bool Attacking => _attacking;
-    public int BombAttackIntensity => bombAttackIntensity;
+    public int BombAttackIntensity { get; private set; }
     public bool CanMove => _canMove;
+   
     public bool IsInvulnerable => _isInvulnerable;
     public delegate void OnKilled();
     public OnKilled onKilled;
@@ -64,7 +64,7 @@ public class Bee : MonoBehaviour
         _originalLayer = gameObject.layer;
     }
 
-    public void Initialize(bool isLeader, Sprite initialSprite, FlockManager flockManager, Vector3 bombAttackDestination)
+    public void Initialize(bool isLeader, Sprite initialSprite, FlockManager flockManager, Vector3 bombAttackDestination, float bornInvulnerabilityTime)
     {
         IsLeader = isLeader;
         ChangeSprite(initialSprite);
@@ -77,23 +77,27 @@ public class Bee : MonoBehaviour
         _blueToGreen = true;
         _isInvulnerable = false;
         _invulnerableTimer = 0;
+
+        if(!isLeader)
+            Locked = flockManager.LeaderBee.Locked;
+
         _bombAttackXDestination = bombAttackDestination;
 
         if (_bornInvulnerabilityCoroutine == null)
-            _bornInvulnerabilityCoroutine = StartCoroutine(BornInvulnerability());
+            _bornInvulnerabilityCoroutine = StartCoroutine(BornInvulnerability(bornInvulnerabilityTime));
         else
         {
             StopCoroutine(_bornInvulnerabilityCoroutine);
-            _bornInvulnerabilityCoroutine = StartCoroutine(BornInvulnerability());
+            _bornInvulnerabilityCoroutine = StartCoroutine(BornInvulnerability(bornInvulnerabilityTime));
         }    
     }
 
-    private IEnumerator BornInvulnerability()
+    private IEnumerator BornInvulnerability(float time)
     {
         
         SetInvulnerable(true, 9);
         _boolJustBorn = true;
-        yield return new WaitForSeconds(bornInvulnerabilityTime);
+        yield return new WaitForSeconds(time);
         _boolJustBorn = false;
         SetInvulnerable(false, _originalLayer);
         _bornInvulnerabilityCoroutine = null;
@@ -129,6 +133,8 @@ public class Bee : MonoBehaviour
 
     private void Update()
     {
+        if (Locked) return;
+
         if (_canMove && IsLeader)
         {
             if (_jumping)
@@ -191,12 +197,16 @@ public class Bee : MonoBehaviour
 
     public void Jump()
     {
-        if(_canMove)
+        if (Locked) return;
+
+        if (_canMove)
             _jumping = true;
     }
 
     void FixedUpdate()
     {
+        if (Locked) return;
+
         if (_canMove && !_attacking)
         {
             if (IsLeader)
@@ -238,7 +248,7 @@ public class Bee : MonoBehaviour
         }
         else if (_canMove && _attacking)
         {
-            GoToXDestination(_bombAttackXDestination, bombAttackSpeed);
+            GoToXDestination(_bombAttackXDestination, _bombAttackSpeed);
         }
     }
 
@@ -380,8 +390,10 @@ public class Bee : MonoBehaviour
         }
     }
 
-    public void BombAttack()
+    public void BombAttack(int bombAttackIntensity, float bombAttackSpeed)
     {
+        BombAttackIntensity = bombAttackIntensity;
+        _bombAttackSpeed = bombAttackSpeed;
         _attacking = true;
         _spriteRenderer.flipX = true;
         _rigidbody2D.velocity = new Vector2(_rigidbody2D.velocity.x, 0);
@@ -411,5 +423,12 @@ public class Bee : MonoBehaviour
     public void ActiveWarning(bool active)
     {
         warningImage.gameObject.SetActive(active);
+    }
+
+    public void Lock(bool locked)
+    {
+        Locked = locked;
+        _verticalMove = 0;
+        _rigidbody2D.velocity = Vector2.zero;
     }
 }

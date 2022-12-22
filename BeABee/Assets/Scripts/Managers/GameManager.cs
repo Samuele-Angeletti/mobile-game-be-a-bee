@@ -39,6 +39,10 @@ public class GameManager : MonoBehaviour, ISubscriber
     [HideInInspector] public int ScoreDone = 0;
     [HideInInspector] public int FlockMax = 0;
     [HideInInspector] public int CurrentFlock = 0;
+    [HideInInspector] public int BossesKilled = 0;
+    [HideInInspector] public int EnemiesKilled = 0;
+    [HideInInspector] public int BombUsed = 0;
+    [HideInInspector] public int InvulnerabilityPicked = 0;
     [HideInInspector] public EScenario CurrentScenario;
 
     public delegate void OnGameStateChange();
@@ -68,6 +72,8 @@ public class GameManager : MonoBehaviour, ISubscriber
     private void Start()
     {
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
+        Publisher.Subscribe(this, typeof(ChoosingNextScenarioMessage));
+        Publisher.Subscribe(this, typeof(ScenarioChoosedMessage));
     }
     private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
@@ -85,6 +91,8 @@ public class GameManager : MonoBehaviour, ISubscriber
     {
         IsGamePlaying = false;
 
+        PlayerStatistics.SetStatistics(new Statistics((int)MetersDone, ScoreDone, FlockMax, BossesKilled, EnemiesKilled, BombUsed, InvulnerabilityPicked));
+
         onGameOver?.Invoke();
 
         Time.timeScale = 1;
@@ -93,7 +101,7 @@ public class GameManager : MonoBehaviour, ISubscriber
         ScoreDone = 0;
         CurrentFlock = 0;
 
-        _uiManager.ResetMenu();
+        _uiManager.ShowFinalStats();
     }
 
     private void Update()
@@ -122,34 +130,36 @@ public class GameManager : MonoBehaviour, ISubscriber
     {
         if(message is EnemyKilledMessage enemyKilledMsg)
         {
+            ScoreDone += enemyKilledMsg.EnemySpawnable.HoneyOnDestroy;
             switch (enemyKilledMsg.EnemyType)
             {
-                case EEnemyType.TwoBees:
-                    ScoreDone += 10;
-                    break;
-                case EEnemyType.ThreeBees:
-                    ScoreDone += 20;
-                    break;
-                case EEnemyType.FourBees:
-                    ScoreDone += 30;
-                    break;
-                case EEnemyType.FiveBees:
-                    ScoreDone += 40;
-                    break;
-                case EEnemyType.SixBees:
-                    ScoreDone += 50;
-                    break;
-                case EEnemyType.SevenBees:
-                    ScoreDone += 60;
-                    break;
                 case EEnemyType.Boss:
-                    ScoreDone += 100;
+                    BossesKilled++;
                     IncreaseGameSpeed();
+                    break;
+                default:
+                    EnemiesKilled++;
                     break;
             }
         }
+        else if(message is ChoosingNextScenarioMessage)
+        {
+            _lastTimeScale = Time.timeScale;
+            Time.timeScale = 1;
+            IsGamePlaying = false;
+        }
+        else if (message is ScenarioChoosedMessage)
+        {
+            Time.timeScale = _lastTimeScale;
+            IsGamePlaying = true;
+        }
     }
-
+    private void OnDestroy()
+    {
+        Publisher.Unsubscribe(this, typeof(EnemyKilledMessage));
+        Publisher.Unsubscribe(this, typeof(ChoosingNextScenarioMessage));
+        Publisher.Unsubscribe(this, typeof(ScenarioChoosedMessage));
+    }
     public void ExitGame()
     {
         Application.Quit();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,10 +7,12 @@ public class EnemySpawnable : Spawnable
 {
     [SerializeField] EEnemyType enemyType;
     [SerializeField] TextMeshProUGUI destroyAmount;
+    
 
     int countToDestroy;
     int currentAttachedBees;
     List<Bee> attachedBees;
+
 
     public delegate void OnDefeatEnemy();
     public OnDefeatEnemy onDefeatEnemy;
@@ -50,9 +53,11 @@ public class EnemySpawnable : Spawnable
 
         if (currentAttachedBees >= countToDestroy)
         {
-            Publisher.Publish(new EnemyKilledMessage(enemyType));
+            Publisher.Publish(new EnemyKilledMessage(enemyType, this));
 
             onDefeatEnemy?.Invoke();
+
+            SpawnVFX();
 
             Kill();
         }
@@ -67,13 +72,15 @@ public class EnemySpawnable : Spawnable
         base.Kill();
     }
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.TryGetComponent<Bee>(out var bee))
         {
             if (EnemyType != EEnemyType.Boss && bee.IsInvulnerable)
             {
-                Publisher.Publish(new EnemyKilledMessage(enemyType));
+                Publisher.Publish(new EnemyKilledMessage(enemyType, this));
+                SpawnVFX();
                 Kill();
             }
 
@@ -114,6 +121,8 @@ public class EnemySpawnable : Spawnable
         destroyAmount.text = $"{currentAttachedBees}/{countToDestroy}";
 
     }
+
+    public int GetCountToDestroy() => countToDestroy;
 }
 
 public enum EEnemyType
