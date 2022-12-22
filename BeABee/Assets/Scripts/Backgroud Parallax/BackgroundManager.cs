@@ -152,8 +152,19 @@ public class BackgroundManager : MonoBehaviour
         
         isChangingScene = true;
     }
+    private void SetScrolling(bool v)
+    {
+        scrollingIsActive = v;
+    }
 
+    public void ActiveScrolling()
+    {
+        SetScrolling(true);
+    }
 
-
+    public void StopScrolling()
+    {
+        SetScrolling(false);
+    }
 
 }

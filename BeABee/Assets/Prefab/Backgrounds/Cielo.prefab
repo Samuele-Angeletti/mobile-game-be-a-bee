@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8610705140677558659}
   - component: {fileID: 6243839922026062749}
   m_Layer: 0
-  m_Name: Sky
+  m_Name: Cielo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
