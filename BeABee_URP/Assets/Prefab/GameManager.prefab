@@ -46,8 +46,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   increaseSpeedAfterMeters: 100
   speedIncreaser: 0.1
+  speedDecreaser: 0
   IsGamePlaying: 0
   MetersDone: 0
   ScoreDone: 0
   FlockMax: 0
   CurrentFlock: 0
+  BossesKilled: 0
+  EnemiesKilled: 0
+  BombUsed: 0
+  InvulnerabilityPicked: 0

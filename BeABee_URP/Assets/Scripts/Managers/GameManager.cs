@@ -54,14 +54,11 @@ public class GameManager : MonoBehaviour, ISubscriber
     FlockManager _flockManager;
     UIManager _uiManager;
     BackgroundManager _backgroundManager;
-    AudioSource _audioSource;
     private float _meterStep;
     private float _lastTimeScale;
     private float _currentSpeedIncreaser;
     private void Awake()
     {
-        _audioSource = GetComponent<AudioSource>();
-
         _inputSystem = new InputSystem();
 
         _inputSystem.Player.Enable();
@@ -76,19 +73,16 @@ public class GameManager : MonoBehaviour, ISubscriber
     private void Start()
     {
         _flockManager.UpdateSprite(CurrentScenario);
-
+        
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
         Publisher.Subscribe(this, typeof(ChoosingNextScenarioMessage));
         Publisher.Subscribe(this, typeof(ScenarioChoosedMessage));
     }
     private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        _flockManager.Jump();
-
         if(IsGamePlaying)
         {
-            _audioSource.Stop();
-            _audioSource.Play();
+            _flockManager.Jump();
         }
     }
 

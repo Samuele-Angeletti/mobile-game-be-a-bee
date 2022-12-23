@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class FlockManager : MonoBehaviour, ISubscriber
+public class FlockManager : MonoBehaviour, ISubscriber, ISoundMaker
 {
     [SerializeField] Bee beePrefab;
     [SerializeField] Sprite spaceSprite;
@@ -29,6 +29,9 @@ public class FlockManager : MonoBehaviour, ISubscriber
     [SerializeField] float timeDisplayWarning;
     [Space(10)]
     [SerializeField] float bornInvulnerabilityTime = 1.5f;
+    [Header("Sounds")]
+    [SerializeField] AudioClip flapSound;
+
     private int _bombQuantity;
     private int _currentInvulnerabilityTime;
     public int BombQuantity
@@ -46,6 +49,9 @@ public class FlockManager : MonoBehaviour, ISubscriber
     List<Bee> _activeBeeList;
     List<Bee> BombAttackRequiredBees => _activeBeeList.Where(x => !x.IsLeader && x.CanMove).ToList();
     public Bee LeaderBee { get; private set; }
+    public AudioSource AudioSource { get ; set; }
+    public string MixerFatherName { get; set; }
+
     Queue<Bee> _beeQueue;
     Coroutine _invulnerableCoroutine;
     UIPlayArea _uiPlayArea;
@@ -55,6 +61,8 @@ public class FlockManager : MonoBehaviour, ISubscriber
         _activeBeeList = new List<Bee>();
         _beeQueue = new Queue<Bee>();
         _uiPlayArea = FindObjectOfType<UIPlayArea>();
+        AudioSource = GetComponent<AudioSource>();
+        MixerFatherName = SoundManager.Instance.GetMixerFatherName(AudioSource.outputAudioMixerGroup.name);
     }
 
     private void Start()
@@ -131,6 +139,8 @@ public class FlockManager : MonoBehaviour, ISubscriber
 
     public void Jump()
     {
+        PlaySound();
+
         foreach (var bee in _activeBeeList)
         {
             bee.SetRandomY(-YRandomPositionOnJump, YRandomPositionOnJump);
@@ -273,6 +283,18 @@ public class FlockManager : MonoBehaviour, ISubscriber
         }
     }
 
+    public void PlaySound()
+    {
+        StopSound();
+        if (!SoundManager.IsMuted && !SoundManager.Instance.IsMixerMuted(MixerFatherName))
+            AudioSource.Play();
+    }
+
+    public void StopSound()
+    {
+        AudioSource.Stop();
+    }
+
     private IEnumerator WarningMessageCoroutine()
     {
         var currentLeader = LeaderBee;
@@ -328,5 +350,6 @@ public class FlockManager : MonoBehaviour, ISubscriber
         }
         
     }
+
 #endif
 }

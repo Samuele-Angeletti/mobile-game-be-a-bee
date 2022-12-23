@@ -48,5 +48,5 @@ MonoBehaviour:
   followListOrder: 1
   backgroundElements:
   - texture: {fileID: 2100000, guid: 1883f245333350446a6c84d3bc9ffaf1, type: 2}
-    relativeSpeed: 0.1
+    relativeSpeed: 0
     order: 1

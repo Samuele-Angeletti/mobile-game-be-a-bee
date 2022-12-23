@@ -27,6 +27,8 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
     [Header("Pause Panel")]
     [SerializeField] GameObject pausePanel;
     [SerializeField] Button pauseButton;
+    [SerializeField] Button soundOn;
+    [SerializeField] Button soundOff;
     GameManager _gameManager;
     BossCondition _currentCondition;
 
@@ -164,7 +166,17 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
 
     public void HandlePausePanel()
     {
-        pausePanel.SetActive(!pausePanel.activeSelf);
+        bool resume = !pausePanel.activeSelf;
+        pausePanel.SetActive(resume);
+
+        if(resume)
+        {
+            if(SoundManager.IsMuted)
+            {
+                soundOn.gameObject.SetActive(true);
+                soundOff.gameObject.SetActive(false);
+            }
+        }
     }
 
     // TODO: _currentScenario >> calcolate next nearby scenarios >> place scenarios on buttons with also the sprite of the next scenarios

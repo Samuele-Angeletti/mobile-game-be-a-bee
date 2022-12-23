@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 464560648141746787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.88, y: 0, z: 0}
+  m_LocalPosition: {x: 12.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -73,6 +73,7 @@ GameObject:
   - component: {fileID: 464560648994880210}
   - component: {fileID: 464560648994880211}
   - component: {fileID: 4593849631312725001}
+  - component: {fileID: 1197238254}
   m_Layer: 0
   m_Name: SpawnerManager
   m_TagString: Untagged
@@ -113,18 +114,17 @@ MonoBehaviour:
   deathPosition: {fileID: 464560648389793628}
   spawnYRange: 4.5
   spawnablePrefabList:
+  - {fileID: 4308624861520627156, guid: 127160c4a6778f344b12aa721510dd3d, type: 3}
+  - {fileID: 5359887479278300605, guid: 3d0174905b15a994f8da014e11deadf1, type: 3}
+  - {fileID: 4308624861520627156, guid: f1ac38bea2e0a39419d8eee527e9aea2, type: 3}
+  - {fileID: 4308624861520627156, guid: 76a5bdbc69e3df94fbd7db058407c1c1, type: 3}
+  - {fileID: 6465964697055182704, guid: b30a290172b1a4a4b8e78df072775124, type: 3}
   - {fileID: 4318322765428556609, guid: cfeb3ba2dddb09b47a9cf373cf2831c5, type: 3}
   - {fileID: 9193801836658237813, guid: fd1e82a8fe78aed4695a23850ec9e3a4, type: 3}
   - {fileID: 5128832056673788597, guid: f3f776c62af19ec41a9d9f2236c614cb, type: 3}
   - {fileID: 6347034654173616933, guid: 62f75c3e86d5a644aa6234e6ac00a418, type: 3}
   - {fileID: 761542519504795974, guid: d600fe17759de8c419bdc2339331dea8, type: 3}
   - {fileID: 1877789853209760501, guid: 3ab097a8dadde574daae5c8c5ac51159, type: 3}
-  - {fileID: 4308624861520627156, guid: f1ac38bea2e0a39419d8eee527e9aea2, type: 3}
-  - {fileID: 1177428397280794018, guid: 036d7f5ee6a5e9641851183ac5a4a0bd, type: 3}
-  - {fileID: 6985695347513491046, guid: aa5f8209b18e8e7429debd354f5791d5, type: 3}
-  - {fileID: 8604396232813191086, guid: 41b83f9318f11aa4f97f9977b27fad41, type: 3}
-  - {fileID: 5581968816961349564, guid: 7e8baa033e026654ca1833cc36c68464, type: 3}
-  - {fileID: 2793354109885726501, guid: b30a290172b1a4a4b8e78df072775124, type: 3}
   - {fileID: 2284149537077699134, guid: 8b16f37f7ab2659479eca9a8d10e7abc, type: 3}
   - {fileID: 957735172245310081, guid: 33608fb655ca0a040833fd0aca89e1ca, type: 3}
   - {fileID: 4021583379808516279, guid: 30dd8ce17c708484687856e334333a3a, type: 3}
@@ -134,7 +134,9 @@ MonoBehaviour:
   chanceSpawnPickable: 100
   chanceSpawnObstacle: 50
   chanceSpawnEnemy: 50
-  activeGizmo: 1
+  normalBackground: {fileID: 8300000, guid: 1cd65fd436c2dbf409a3911831dc960e, type: 3}
+  bossBackground: {fileID: 8300000, guid: c9a29a8e6e0bf784e97cccf6ce973549, type: 3}
+  activeGizmo: 0
   radiusSphere: 0.2
   color: {r: 0, g: 1, b: 0.4793043, a: 1}
 --- !u!114 &4593849631312725001
@@ -153,16 +155,127 @@ MonoBehaviour:
   bossConditionList:
   - BossPrefab: {fileID: 3477185393002570394, guid: 14eef612f73cb4f4dbbe8254632ee7d8, type: 3}
     Meters: 100
-    Score: 40
+    Score: 50
     MaxFlockHad: 5
     CountToDestroyBoss: 5
-  - BossPrefab: {fileID: 3477185393002570394, guid: a985a7fa681b923408a34ba45c25d3cd, type: 3}
+  - BossPrefab: {fileID: 3477185393002570394, guid: 37ef15f05ee256f49975a43234431ef1, type: 3}
     Meters: 200
-    Score: 100
-    MaxFlockHad: 10
+    Score: 150
+    MaxFlockHad: 12
     CountToDestroyBoss: 7
-  - BossPrefab: {fileID: 3477185393002570394, guid: 05e622744b4fc624598aa0b6160b8f86, type: 3}
+  - BossPrefab: {fileID: 3477185393002570394, guid: f7c17002825a8d946ab878799d89453a, type: 3}
     Meters: 300
     Score: 180
     MaxFlockHad: 30
     CountToDestroyBoss: 12
+  - BossPrefab: {fileID: 3477185393002570394, guid: 14eef612f73cb4f4dbbe8254632ee7d8, type: 3}
+    Meters: 400
+    Score: 450
+    MaxFlockHad: 50
+    CountToDestroyBoss: 15
+  - BossPrefab: {fileID: 3477185393002570394, guid: 37ef15f05ee256f49975a43234431ef1, type: 3}
+    Meters: 500
+    Score: 750
+    MaxFlockHad: 80
+    CountToDestroyBoss: 20
+  - BossPrefab: {fileID: 3477185393002570394, guid: f7c17002825a8d946ab878799d89453a, type: 3}
+    Meters: 700
+    Score: 1000
+    MaxFlockHad: 100
+    CountToDestroyBoss: 25
+--- !u!82 &1197238254
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464560648994880236}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -6171036256484321042, guid: f1ed28ec0d0d78649a02e4ae8724a8a6, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 1cd65fd436c2dbf409a3911831dc960e, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

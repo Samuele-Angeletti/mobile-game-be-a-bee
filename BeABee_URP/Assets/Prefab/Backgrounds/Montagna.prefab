@@ -48,20 +48,20 @@ MonoBehaviour:
   followListOrder: 1
   backgroundElements:
   - texture: {fileID: 2100000, guid: 8823618aae879834fa47406722a1077f, type: 2}
-    relativeSpeed: 0.6
+    relativeSpeed: 0.8
     order: 1
   - texture: {fileID: 2100000, guid: dbe871579cf1bd3449521b8bfc5675dc, type: 2}
-    relativeSpeed: 0.5
+    relativeSpeed: 0.7
     order: 2
   - texture: {fileID: 2100000, guid: fc0093a213271c342be80e343bf3917a, type: 2}
-    relativeSpeed: 0.4
+    relativeSpeed: 0.6
     order: 3
   - texture: {fileID: 2100000, guid: 2b06c18a474dd874daf15e26fad10184, type: 2}
-    relativeSpeed: 0.3
+    relativeSpeed: 0.5
     order: 4
   - texture: {fileID: 2100000, guid: af69dffbca469f549bb44af3406530f9, type: 2}
-    relativeSpeed: 0.2
+    relativeSpeed: 0.4
     order: 5
   - texture: {fileID: 2100000, guid: 8fb9add649fb1d54d912ccf8ee9be9ee, type: 2}
-    relativeSpeed: 0.1
+    relativeSpeed: 0.3
     order: 6

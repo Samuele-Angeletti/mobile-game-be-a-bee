@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviour, ISoundMaker
 {
     [SerializeField] GameObject MainMenu;
     [SerializeField] GameObject ShopMenu;
@@ -10,13 +10,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject GameOverMenu;
     private UIGameOver _uiGameOver;
     private UIPlayArea _uiPlayArea;
-
-    // TODO: display game over menu with statistics then ResetMenu on press "continue button"
+    public string MixerFatherName { get; set; }
+    public AudioSource AudioSource { get ; set ; }
 
     private void Awake()
     {
         _uiPlayArea = PlayArea.SearchComponent<UIPlayArea>();
         _uiGameOver = GameOverMenu.SearchComponent<UIGameOver>();
+        AudioSource = GetComponent<AudioSource>();
+        MixerFatherName = SoundManager.Instance.GetMixerFatherName(AudioSource.outputAudioMixerGroup.name);
     }
     public void ResetMenu()
     {
@@ -35,4 +37,14 @@ public class UIManager : MonoBehaviour
         PlayArea.SetActive(false);
     }
 
+    public void PlaySound()
+    {
+        if (!SoundManager.IsMuted && !SoundManager.Instance.IsMixerMuted(MixerFatherName))
+            AudioSource.Play();
+    }
+
+    public void StopSound()
+    {
+        AudioSource.Stop();
+    }
 }

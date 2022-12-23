@@ -48,14 +48,14 @@ MonoBehaviour:
   followListOrder: 1
   backgroundElements:
   - texture: {fileID: 2100000, guid: 8628f1e85265795489bece1358475a27, type: 2}
-    relativeSpeed: 0.4
+    relativeSpeed: 0.8
     order: 1
   - texture: {fileID: 2100000, guid: f43e54674d24094429aeae62e140e365, type: 2}
-    relativeSpeed: 0.3
+    relativeSpeed: 0.7
     order: 2
   - texture: {fileID: 2100000, guid: 4992a9c522fbc584eadb61256708ff8b, type: 2}
-    relativeSpeed: 0.2
+    relativeSpeed: 0.6
     order: 3
   - texture: {fileID: 2100000, guid: e5d3e00a3d3e584429667c88a83adbbc, type: 2}
-    relativeSpeed: 0.1
+    relativeSpeed: 0.5
     order: 4
