@@ -20,6 +20,12 @@ public class UIManager : MonoBehaviour, ISoundMaker
         AudioSource = GetComponent<AudioSource>();
         MixerFatherName = SoundManager.Instance.GetMixerFatherName(AudioSource.outputAudioMixerGroup.name);
     }
+
+    private void Start()
+    {
+        GameManager.Instance.onGameOver += () => PlaySound();
+    }
+
     public void ResetMenu()
     {
         MainMenu.SetActive(true);
