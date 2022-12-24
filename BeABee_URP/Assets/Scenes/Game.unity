@@ -503,6 +503,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 334724281138623217, guid: 37435a77b09eb3d4fb7a6fd69f461428, type: 3}
+      propertyPath: startingScenery
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 334724281138623222, guid: 37435a77b09eb3d4fb7a6fd69f461428, type: 3}
       propertyPath: m_RootOrder
       value: 4
