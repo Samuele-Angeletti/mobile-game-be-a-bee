@@ -11,7 +11,8 @@
                     "id": "a1ed0a51-f4f8-447a-9e77-3dc283b928a7",
                     "expectedControlType": "Touch",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": true
                 },
                 {
                     "name": "JumpDEMO",
@@ -19,7 +20,8 @@
                     "id": "c20d0408-2711-41f0-b4a9-64acf8f82fb5",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": ""
+                    "interactions": "",
+                    "initialStateCheck": false
                 },
                 {
                     "name": "TouchScreen",
@@ -27,7 +29,8 @@
                     "id": "2d3b1cfd-ca14-48e3-bc99-b66b8e4bab63",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press(behavior=2)"
+                    "interactions": "Press",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [

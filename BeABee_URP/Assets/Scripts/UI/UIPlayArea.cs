@@ -166,15 +166,21 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
 
     public void HandlePausePanel()
     {
-        bool resume = !pausePanel.activeSelf;
-        pausePanel.SetActive(resume);
+        bool pause = !pausePanel.activeSelf;
+        pausePanel.SetActive(pause);
 
-        if(resume)
+        if(pause)
         {
             if(SoundManager.IsMuted)
             {
                 soundOn.gameObject.SetActive(true);
                 soundOff.gameObject.SetActive(false);
+            }
+            else
+            {
+                soundOn.gameObject.SetActive(false);
+                soundOff.gameObject.SetActive(true);
+
             }
         }
     }
