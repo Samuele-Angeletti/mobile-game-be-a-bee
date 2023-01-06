@@ -41,6 +41,10 @@ public class BackgroundManager : MonoBehaviour
 
     bool isChangingScene;
 
+	public delegate void OnVerticalScrollingChange();
+    public OnVerticalScrollingChange onScrollingStop;
+    public OnVerticalScrollingChange onScrollingStart;
+
     void Start()
     {
         ResetMoving();
@@ -56,6 +60,7 @@ public class BackgroundManager : MonoBehaviour
         isChangingScene = false;
         position = 0;
         startPosition = Vector3.zero;
+		onScrollingStop?.Invoke();
     }
 
     private void CalculateSpawnPoint()
@@ -153,6 +158,7 @@ public class BackgroundManager : MonoBehaviour
         activeBackgroundContainer.transform.SetParent(mover);
         
         isChangingScene = true;
+		onScrollingStart?.Invoke();
     }
     private void SetScrolling(bool v)
     {
