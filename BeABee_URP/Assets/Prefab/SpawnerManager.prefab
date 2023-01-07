@@ -130,6 +130,7 @@ MonoBehaviour:
   - {fileID: 4021583379808516279, guid: 30dd8ce17c708484687856e334333a3a, type: 3}
   - {fileID: 6320744550613284922, guid: 53c20848902d9394ea662e0539f4c3c5, type: 3}
   - {fileID: 8624474705907647355, guid: 96e8966e307f4e244bb44b3b4addbbbf, type: 3}
+  - {fileID: 8749548708333670718, guid: afdaaef5cb8b5144282862307618750a, type: 3}
   timeSpawn: 5
   chanceSpawnPickable: 100
   chanceSpawnObstacle: 50

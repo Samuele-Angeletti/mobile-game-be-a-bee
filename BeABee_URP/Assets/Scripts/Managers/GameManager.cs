@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour, ISubscriber
@@ -34,6 +32,8 @@ public class GameManager : MonoBehaviour, ISubscriber
     [SerializeField] int increaseSpeedAfterMeters = 200;
     [SerializeField] float speedIncreaser = 0.1f;
     [SerializeField] float speedDecreaser = 0.01f;
+    [Header("Game Over Settings")]
+    [SerializeField] int valueBoxOfHoney;
 
     [HideInInspector] public bool IsGamePlaying;
     [HideInInspector] public float MetersDone = 0;
@@ -44,11 +44,14 @@ public class GameManager : MonoBehaviour, ISubscriber
     [HideInInspector] public int EnemiesKilled = 0;
     [HideInInspector] public int BombUsed = 0;
     [HideInInspector] public int InvulnerabilityPicked = 0;
+    [HideInInspector] public int PollenPicked = 0;
     [HideInInspector] public EScenario CurrentScenario => _backgroundManager.ActiveScenery;
 
     public delegate void OnGameStateChange();
     public OnGameStateChange onGameOver;
     public OnGameStateChange onGameStart;
+
+    public BackgroundManager BackgroundManager => _backgroundManager;
 
     InputSystem _inputSystem;
     FlockManager _flockManager;
@@ -57,6 +60,7 @@ public class GameManager : MonoBehaviour, ISubscriber
     private float _meterStep;
     private float _lastTimeScale;
     private float _currentSpeedIncreaser;
+
     private void Awake()
     {
         _inputSystem = new InputSystem();
@@ -73,14 +77,14 @@ public class GameManager : MonoBehaviour, ISubscriber
     private void Start()
     {
         _flockManager.UpdateSprite(CurrentScenario);
-        
+
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
         Publisher.Subscribe(this, typeof(ChoosingNextScenarioMessage));
         Publisher.Subscribe(this, typeof(ScenarioChoosedMessage));
     }
     private void JumpPerformed(UnityEngine.InputSystem.InputAction.CallbackContext obj)
     {
-        if(IsGamePlaying)
+        if (IsGamePlaying)
         {
             _flockManager.Jump();
         }
@@ -98,27 +102,24 @@ public class GameManager : MonoBehaviour, ISubscriber
     {
         IsGamePlaying = false;
 
-        PlayerStatistics.SetStatistics(new Statistics((int)MetersDone, ScoreDone, FlockMax, BossesKilled, EnemiesKilled, BombUsed, InvulnerabilityPicked));
+        PlayerStatistics.SetStatistics(new Statistics((int)MetersDone, ScoreDone, FlockMax, BossesKilled, EnemiesKilled, BombUsed, InvulnerabilityPicked, PollenPicked));
 
         onGameOver?.Invoke();
 
         Time.timeScale = 1;
-        MetersDone = 0;
-        FlockMax = 0;
-        ScoreDone = 0;
-        CurrentFlock = 0;
+        ResetStatistics();
 
         _uiManager.ShowFinalStats();
     }
 
     private void Update()
     {
-        if(IsGamePlaying)
+        if (IsGamePlaying)
         {
             MetersDone += Time.deltaTime;
 
             _meterStep += Time.deltaTime;
-            if(_meterStep >= increaseSpeedAfterMeters)
+            if (_meterStep >= increaseSpeedAfterMeters)
             {
                 _meterStep = 0;
                 IncreaseGameSpeed();
@@ -137,7 +138,7 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     public void OnPublish(IMessage message)
     {
-        if(message is EnemyKilledMessage enemyKilledMsg)
+        if (message is EnemyKilledMessage enemyKilledMsg)
         {
             ScoreDone += enemyKilledMsg.EnemySpawnable.HoneyOnDestroy;
             switch (enemyKilledMsg.EnemyType)
@@ -151,7 +152,7 @@ public class GameManager : MonoBehaviour, ISubscriber
                     break;
             }
         }
-        else if(message is ChoosingNextScenarioMessage)
+        else if (message is ChoosingNextScenarioMessage)
         {
             _lastTimeScale = Time.timeScale;
             Time.timeScale = 1;
@@ -177,7 +178,7 @@ public class GameManager : MonoBehaviour, ISubscriber
 
     public void PauseGame()
     {
-        if(Time.timeScale == 0)
+        if (Time.timeScale == 0)
         {
             ResumeGame();
             return;
@@ -192,5 +193,28 @@ public class GameManager : MonoBehaviour, ISubscriber
     {
         Time.timeScale = _lastTimeScale;
         IsGamePlaying = true;
+    }
+
+    private void ResetStatistics()
+    {
+        MetersDone = 0;
+        ScoreDone = 0;
+        FlockMax = 0;
+        CurrentFlock = 0;
+        BossesKilled = 0;
+        EnemiesKilled = 0;
+        BombUsed = 0;
+        InvulnerabilityPicked = 0;
+        PollenPicked = 0;
+    }
+
+    public void ForceUnlockFlock()
+    {
+        _flockManager.LockFlock(false);
+    }
+
+    public void ExplodeHoneyBoxes()
+    {
+        PlayerStatistics.ExplodeHoneyBoxes(valueBoxOfHoney);
     }
 }

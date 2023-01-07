@@ -9,8 +9,11 @@ public class PickableSpawnable : Spawnable
     public override void Initialize(Vector3 deathPosition)
     {
         base.Initialize(deathPosition);
-
+        
         PickableType = pickableType;
+
+        if (PickableType == EPickableType.Pollen)
+            PollenGenerated = GetPollen();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -18,11 +21,12 @@ public class PickableSpawnable : Spawnable
         var bee = collision.gameObject.GetComponent<Bee>();
         if(bee != null)
         {
-            bee.AddPickable(pickableType);
+            bee.AddPickable(pickableType, this);
             SpawnVFX();
             Kill();
         }
     }
+
 }
 
 public enum EPickableType
@@ -32,5 +36,6 @@ public enum EPickableType
     AddTwoBees,
     AddThreeBees,
     Invincible,
-    Bomb
+    Bomb,
+    Pollen
 }

@@ -35,7 +35,11 @@ public static class PlayerStatistics
     {
         get; private set;
     }
-
+    public static int TotalPollen
+    {
+        get; private set;
+    }
+    
     // last session
     public static int CurrentMeters
     {
@@ -65,7 +69,16 @@ public static class PlayerStatistics
     {
         get; private set;
     }
-
+    public static int CurrentPollen
+    {
+        get; private set;
+    }
+    public static int BoxOfHoney
+    {
+        get; private set;
+    }
+    public static int LastTotalPollen { get; private set; }
+    public static int LastTotalBoxOfHoney { get; private set; }
     public static void SetStatistics(Statistics stats)
     {
         CurrentMeters = stats.Meters;
@@ -75,6 +88,7 @@ public static class PlayerStatistics
         CurrentEnemiesKilled = stats.EnemiesKilled;
         CurrentBombsUsed = stats.BombsUsed;
         CurrentInvulnerability = stats.Invulnerability;
+        CurrentPollen = stats.Pollen;
 
         TotalMeters += CurrentMeters;
         TotalHoney += CurrentHoney;
@@ -83,6 +97,23 @@ public static class PlayerStatistics
         TotalEnemiesKilled += CurrentEnemiesKilled;
         TotalBombsUsed += CurrentBombsUsed;
         TotalInvulnerability += CurrentInvulnerability;
+
+        LastTotalPollen = TotalPollen;
+        LastTotalBoxOfHoney = BoxOfHoney;
+
+        TotalPollen += CurrentPollen;
+
+        while(TotalPollen / 100 >= 1)
+        {
+            BoxOfHoney++;
+            TotalPollen -= 100;
+        }
+    }
+
+    public static void ExplodeHoneyBoxes(int insideHoneyAmount)
+    {
+        TotalHoney += insideHoneyAmount * BoxOfHoney;
+        BoxOfHoney = 0;
     }
 }
 
@@ -95,7 +126,8 @@ public struct Statistics
     public int EnemiesKilled;
     public int BombsUsed;
     public int Invulnerability;
-    public Statistics(int currentMeters, int currentHoney, int currentFlock, int currentBossesKilled, int currentEnemiesKilled, int currentBombsUsed, int currentInvulnerability)
+    public int Pollen;
+    public Statistics(int currentMeters, int currentHoney, int currentFlock, int currentBossesKilled, int currentEnemiesKilled, int currentBombsUsed, int currentInvulnerability, int currentPollen)
     {
         Meters = currentMeters;
         Honey = currentHoney;
@@ -104,5 +136,6 @@ public struct Statistics
         EnemiesKilled = currentEnemiesKilled;
         BombsUsed = currentBombsUsed;
         Invulnerability = currentInvulnerability;
+        Pollen = currentPollen;
     }
 }

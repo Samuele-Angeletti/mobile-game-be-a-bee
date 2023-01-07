@@ -74,6 +74,9 @@ public class FlockManager : MonoBehaviour, ISubscriber, ISoundMaker
 
         GameManager.Instance.onGameOver += () => BombQuantity = 0;
 
+        GameManager.Instance.BackgroundManager.onScrollingStop += () => LockFlock(false);
+
+
         if (minBeesRequiredForBombAttack <= 1)
             minBeesRequiredForBombAttack = 2;
         Publisher.Subscribe(this, typeof(EnemyKilledMessage));
@@ -153,8 +156,8 @@ public class FlockManager : MonoBehaviour, ISubscriber, ISoundMaker
         LeaderBee = bee != null
             ? bee
             : _activeBeeList.Count > 0
-            ? _activeBeeList.Where(x => !x.Attacking).OrderBy(x => x.transform.position.x).Last()
-            : null;
+                ? _activeBeeList.Where(x => !x.Attacking).First()//.OrderBy(x => x.transform.position.x).Last()
+                : null;
 
         if(LeaderBee == null)
         {
@@ -241,7 +244,6 @@ public class FlockManager : MonoBehaviour, ISubscriber, ISoundMaker
         }
         else if(message is ScenarioChoosedMessage scenarioChoosedMessage)
         {
-            LockFlock(false);
             UpdateFlockSprite(scenarioChoosedMessage);
         }
     }

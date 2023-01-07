@@ -32,10 +32,11 @@ public class SpawnerManager : MonoBehaviour, ISubscriber, ISoundMaker
 
     bool _spawningBoss;
     List<Spawnable> _onGameSpawnableList;
-
+    GameManager _gameManager;
     private void Awake()
     {
         _onGameSpawnableList = new List<Spawnable>();
+        _gameManager = GameManager.Instance;
         AudioSource = GetComponent<AudioSource>();
         MixerFatherName = SoundManager.Instance.GetMixerFatherName(AudioSource.outputAudioMixerGroup.name);
     }
@@ -60,7 +61,7 @@ public class SpawnerManager : MonoBehaviour, ISubscriber, ISoundMaker
 
     private void Update()
     {
-        if(GameManager.Instance.IsGamePlaying && !_spawningBoss)
+        if(_gameManager.IsGamePlaying && !_spawningBoss)
         {
             _timePassed += Time.deltaTime;
             if(_timePassed >= timeSpawn)
@@ -80,7 +81,7 @@ public class SpawnerManager : MonoBehaviour, ISubscriber, ISoundMaker
             var spawnableType = GetSpawnType();
             var selectedSpawnableTypeList = spawnablePrefabList.Where(x => x.SpawnableType == spawnableType).ToList();
 
-            selectedSpawnablePrefab = spawnableType == ESpawnableTypes.Enemy ? GetRandomEnemy(selectedSpawnableTypeList) : selectedSpawnableTypeList[UnityEngine.Random.Range(0, selectedSpawnableTypeList.Count)];
+            selectedSpawnablePrefab = spawnableType == ESpawnableTypes.Enemy ? GetCircumstancesEenemy(selectedSpawnableTypeList) : selectedSpawnableTypeList[UnityEngine.Random.Range(0, selectedSpawnableTypeList.Count)];
         }
         else
             selectedSpawnablePrefab = spawnable;
@@ -132,7 +133,7 @@ public class SpawnerManager : MonoBehaviour, ISubscriber, ISoundMaker
         _onGameSpawnableList.Add(newSpawnable);
     }
 
-    private Spawnable GetRandomEnemy(List<Spawnable> selectedSpawnableTypeList)
+    private Spawnable GetCircumstancesEenemy(List<Spawnable> selectedSpawnableTypeList)
     {
         var enemyPrefabList = selectedSpawnableTypeList.Select(x => (EnemySpawnable)x).OrderBy(x => x.GetCountToDestroy()).ToList();
 

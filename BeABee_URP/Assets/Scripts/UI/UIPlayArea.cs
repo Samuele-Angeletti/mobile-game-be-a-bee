@@ -32,7 +32,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
     GameManager _gameManager;
     BossCondition _currentCondition;
 
-    [Header("Scenario Choise Buttons")]
+    [Header("Scenario Choice Buttons")]
     [SerializeField] GameObject scenarioButtonsPanel;
     [SerializeField] Button upDirectionButton;
     [SerializeField] Button middleDirectionButton;
@@ -40,12 +40,20 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
     [SerializeField] Slider timerTextSlider;
     [SerializeField] float timer;
 
+    [Header("Play Area Settings")]
+    [SerializeField] Image currentBeesLabel;
+    [SerializeField] Sprite spaceBee;
+    [SerializeField] Sprite skyBee;
+    [SerializeField] Sprite mountainBee;
+    [SerializeField] Sprite forestBee;
+    [SerializeField] Sprite undergroundBee;
+
     private float timePassed;
     Coroutine _selectingScenario;
     private void Start()
     {
         _gameManager = GameManager.Instance;
-
+        _gameManager.onGameStart += () => ChangePlayAreaSprite(GameManager.Instance.CurrentScenario);
         Publisher.Subscribe(this, typeof(BossConditionChangedMessage));
         Publisher.Subscribe(this, typeof(ChoosingNextScenarioMessage));
         Publisher.Subscribe(this, typeof(ScenarioChoosedMessage));
@@ -119,7 +127,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
             pauseButton.interactable = false;
             _selectingScenario = StartCoroutine(DisplayButtonsCoroutine());
         }
-        else if(message is ScenarioChoosedMessage)
+        else if(message is ScenarioChoosedMessage scenarioChoosed)
         {
             if (_selectingScenario != null)
             {
@@ -127,6 +135,30 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
                 _selectingScenario = null;
             }
             pauseButton.interactable = true;
+
+            ChangePlayAreaSprite(scenarioChoosed.CurrentScenario);
+        }
+    }
+
+    private void ChangePlayAreaSprite(EScenario currentScenario)
+    {
+        switch (currentScenario)
+        {
+            case EScenario.Space:
+                currentBeesLabel.sprite = spaceBee;
+                break;
+            case EScenario.Sky:
+                currentBeesLabel.sprite = skyBee;
+                break;
+            case EScenario.Mountain:
+                currentBeesLabel.sprite = mountainBee;
+                break;
+            case EScenario.Forest:
+                currentBeesLabel.sprite = forestBee;
+                break;
+            case EScenario.Underground:
+                currentBeesLabel.sprite = undergroundBee;
+                break;
         }
     }
 
@@ -141,6 +173,7 @@ public class UIPlayArea : MonoBehaviour, ISubscriber
             if(timePassed <= 0)
             {
                 middleDirectionButton.GetComponent<UIButtonAction>().ScenarioSelected();
+                _gameManager.ForceUnlockFlock();
                 scenarioButtonsPanel.SetActive(false);
                 break;
             }

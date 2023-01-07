@@ -13,13 +13,18 @@ public class Spawnable : MonoBehaviour
     public Sprite DeadBodyySprite;
     public GameObject DeadBodyprefab;
     public GameObject HoneyGainedPrefab;
+    public GameObject PollenGainedPrefab;
     public int HoneyOnDestroy;
+
+    [SerializeField] Vector2 randomPollenGained;
+
     public ESpawnableTypes SpawnableType => spawnableType;
 
     [HideInInspector] public EObstacleType ObstacleType = EObstacleType.None;
     [HideInInspector] public EEnemyType EnemyType = EEnemyType.None;
     [HideInInspector] public EPickableType PickableType = EPickableType.None;
-    
+    [HideInInspector] public int PollenGenerated;
+
     public delegate void OnDestroySpawnable();
     public OnDestroySpawnable onDestroySpawnable;
 
@@ -40,6 +45,11 @@ public class Spawnable : MonoBehaviour
     private void Update()
     {
         UpdateSpawnable();
+    }
+
+    public int GetPollen()
+    {
+        return UnityEngine.Random.Range((int)randomPollenGained.x, (int)randomPollenGained.y + 1);
     }
 
     public virtual void UpdateSpawnable()
@@ -81,6 +91,13 @@ public class Spawnable : MonoBehaviour
         {
             GameObject honeyGained = Instantiate(HoneyGainedPrefab, transform.position, Quaternion.identity);
             honeyGained.GetComponentInChildren<TextMeshProUGUI>().text = HoneyOnDestroy.ToString();
+        }
+
+        if(PollenGainedPrefab != null)
+        {
+            GameObject pollenGained = Instantiate(PollenGainedPrefab, transform.position, Quaternion.identity);
+            pollenGained.GetComponentInChildren<TextMeshProUGUI>().text = PollenGenerated.ToString();
+
         }
     }
 

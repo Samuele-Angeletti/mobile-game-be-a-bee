@@ -368,7 +368,7 @@ public class Bee : MonoBehaviour
     }
 
 
-    public void AddPickable(EPickableType pickableType)
+    public void AddPickable(EPickableType pickableType, PickableSpawnable pickableSpawnable = null)
     {
         switch (pickableType)
         {
@@ -389,6 +389,9 @@ public class Bee : MonoBehaviour
                 break;
             case EPickableType.Bomb:
                 _flockManager.BombQuantity += 1;
+                break;
+            case EPickableType.Pollen:
+                GameManager.Instance.PollenPicked += pickableSpawnable.PollenGenerated;
                 break;
         }
     }
