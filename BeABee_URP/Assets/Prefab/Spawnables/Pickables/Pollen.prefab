@@ -59,7 +59,7 @@ MonoBehaviour:
   HoneyGainedPrefab: {fileID: 0}
   PollenGainedPrefab: {fileID: 4153838338938292324, guid: 5dc12f68ae4ffec4eace66deb3106ae7, type: 3}
   HoneyOnDestroy: 0
-  randomPollenGained: {x: 1, y: 10}
+  randomPollenGained: {x: 100, y: 110}
   ObstacleType: 0
   EnemyType: 0
   PickableType: 0

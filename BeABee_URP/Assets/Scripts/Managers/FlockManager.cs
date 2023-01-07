@@ -187,7 +187,7 @@ public class FlockManager : MonoBehaviour, ISubscriber, ISoundMaker
         _currentInvulnerabilityTime = invulnerableTime;
         while(_currentInvulnerabilityTime > 0)
         {
-            LeaderBee.UpdateInvlunerableText(true, _currentInvulnerabilityTime);
+            LeaderBee?.UpdateInvlunerableText(true, _currentInvulnerabilityTime);
             yield return new WaitForSeconds(1);
             _currentInvulnerabilityTime--;
         }
